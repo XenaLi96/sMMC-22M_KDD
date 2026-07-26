@@ -723,7 +723,7 @@ covering organs such as lung, pancreas, skin, liver, kidney, brain, and breast.
 The data is generated using the Xenium in situ platform, capturing gene expression at subcellular resolution.
 Overall, the Xenium dataset includes 28 collections, covering 12 million cells across 67,316 tissue patches.
 
-For the benchmark, Xenium contributes the broader study diversity and the cross-platform evaluation targets. We currently curate 28 Xenium collections spanning human and mouse tissues, with panel sizes ranging from targeted 541-gene panels to larger 5K/custom panels with more than 10k genes. Platform-provided cell coordinates and segmentation masks are used whenever available to anchor cell-level crops in the histology frame. Because the Xenium panels are not uniform, cross-platform evaluation is defined on the \emph{intersection} of harmonized gene symbols between the train and test domains rather than on the union of all genes. This shared-gene protocol is what yields the 465-gene HLCD033 benchmark and the 370-gene HLCP018 benchmark reported later in the appendix.
+For the benchmark, Xenium contributes the broader study diversity and the cross-platform evaluation targets. We currently curate 28 Xenium collections spanning human and mouse tissues, with panel sizes ranging from targeted 541-gene panels to larger 5K/custom panels with more than 10k genes. Platform-provided cell coordinates and segmentation masks are used whenever available to anchor cell-level crops in the histology frame. Because the Xenium panels are not uniform, cross-platform evaluation is defined on the \emph{intersection} of harmonized gene symbols between the train and test domains rather than on the union of all genes. For readability, we call the two native-Xenium human-lung-cancer targets \textbf{X1} and \textbf{X2}; internal source identifiers remain only in the machine-readable manifest. This shared-gene protocol yields 370 genes for X1 and 465 genes for X2 in the benchmarks reported later in the appendix.
 
 \subsection{Visium HD Data Source}
 \label{sec:st}
@@ -738,7 +738,7 @@ Together, the Xenium and Visium HD datasets form a comprehensive foundation for 
 
 For Visium HD we start from the native 2\,$\mu$m bin grid and the full-resolution histology image supplied by the platform. Bins are registered into the slide coordinate system using the official spatial transforms, after which a cell-segmentation stage defines candidate nuclei/cells in the same coordinate frame. Cell-level expression is then obtained by aggregating bin counts to segmented cells following the official 10x/bin2cell-style workflow: bins overlapping a segmented cell are assigned to that cell; boundary cases are resolved within the segmentation workflow before aggregation; and cells without stable spatial support or valid image context are removed before patch extraction. The resulting cell table is the unit used throughout the benchmark.
 
-Platform harmonization is handled explicitly at evaluation time. Within-platform Visium HD experiments use the full 18,085-gene panel. Cross-platform evaluation is restricted to genes shared after gene-symbol harmonization between the train and test datasets, and the cached Xenium$\leftrightarrow$Visium runs additionally use shared-gene normalization before retrieval. In the completed appendix experiments this yields 465 shared genes for K$\!\rightarrow\!$HLCD033 and 370 shared genes for K$\!\rightarrow\!$HLCP018 and HLCP018$\!\rightarrow\!$D.
+Platform harmonization is handled explicitly at evaluation time. Within-platform Visium HD experiments use the full 18,085-gene panel. Cross-platform evaluation is restricted to genes shared after gene-symbol harmonization between the train and test datasets, and the cached Xenium$\leftrightarrow$Visium runs additionally use shared-gene normalization before retrieval. In the completed appendix experiments this yields 465 shared genes for A$\!\rightarrow\!$X2 and 370 shared genes for A$\!\rightarrow\!$X1 and X1$\!\rightarrow\!$B.
 
 \begin{figure*}[t]
 \centering
@@ -777,10 +777,10 @@ paper.
 \toprule
 \textbf{Sample / study} & \textbf{Organ} & \textbf{Platform} & \textbf{Genes} & \textbf{In-domain} & \textbf{Cross-patient} & \textbf{Cross-platform} \\
 \midrule
-A & Human lung cancer & Visium HD & 18,085 & yes ($A\!\rightarrow\!A$) & yes ($A\!\rightarrow\!B$) & yes ($A\!\rightarrow\!$ HLCD033 / HLCP018) \\
-B & Human lung cancer & Visium HD & 18,085 & data available & yes (held-out target) & yes ($\leftarrow$ HLCP018) \\
-HLCP018 & Human lung cancer & Xenium & 541 & yes (HLCP018$\!\rightarrow\!$HLCP018) & n/a & yes (HLCP018$\!\rightarrow\!B$) \\
-HLCD033 & Human lung cancer & Xenium & 541 & not used here & n/a & yes ($A\!\rightarrow\!$HLCD033) \\
+A & Human lung cancer & Visium HD & 18,085 & yes ($A\!\rightarrow\!A$) & yes ($A\!\rightarrow\!B$) & yes ($A\!\rightarrow\!$X1 / X2) \\
+B & Human lung cancer & Visium HD & 18,085 & data available & yes (held-out target) & yes ($\leftarrow$X1) \\
+X1: native-Xenium lung target 1 & Human lung cancer & Xenium & 541 & yes (X1$\!\rightarrow\!$X1) & n/a & yes (X1$\!\rightarrow\!B$) \\
+X2: native-Xenium lung target 2 & Human lung cancer & Xenium & 541 & not used here & n/a & yes ($A\!\rightarrow\!$X2) \\
 \bottomrule
 \end{tabular}
 }
@@ -1354,12 +1354,12 @@ The stable appendix tables later in this section are still dominated by frozen-e
 
 \subsection{Benchmark protocol details}
 \label{sec:benchmark_protocol}
-The current appendix reports the three benchmark regimes used throughout the paper: \textbf{in-domain}, \textbf{cross-patient}, and \textbf{cross-platform}. In-domain evaluation uses a left--right spatial split within a sample, with the left two thirds of the tissue used as the retrieval/reference bank and the right one third used as held-out evaluation. For the representative Visium HD sample A this split is implemented by an $x$-axis cutoff at 15,600.65 in full-resolution coordinates; for HLCP018 the corresponding cutoff is 1,933.71. Cross-patient evaluation keeps the same preprocessing and model protocol but changes the test sample, e.g., A$\!\rightarrow\!$B. Cross-platform evaluation changes both sample and acquisition technology, and is therefore restricted to the shared-gene set after gene-symbol harmonization.
+The current appendix reports the three benchmark regimes used throughout the paper: \textbf{in-domain}, \textbf{cross-patient}, and \textbf{cross-platform}. In-domain evaluation uses a left--right spatial split within a sample, with the left two thirds of the tissue used as the retrieval/reference bank and the right one third used as held-out evaluation. For the representative Visium HD sample A this split is implemented by an $x$-axis cutoff at 15,600.65 in full-resolution coordinates; for native-Xenium lung target X1 the corresponding cutoff is 1,933.71. Cross-patient evaluation keeps the same preprocessing and model protocol but changes the test sample, e.g., A$\!\rightarrow\!$B. Cross-platform evaluation changes both sample and acquisition technology, and is therefore restricted to the shared-gene set after gene-symbol harmonization.
 
 The current appendix should be read as a matched three-regime benchmark package. Throughout the appendix, all reported retrieval results follow the same in-domain, cross-patient, and cross-platform protocol with shared preprocessing, target definitions, and evaluation code.
 
 \subsection{Prediction targets and metric definitions}
-Two target definitions are used. Within-platform Visium HD runs use the full 18,085-gene panel available in the processed HD cell table. Cross-platform runs use only the shared genes between the train and test domains after harmonized symbol matching. In the completed experiments this yields 465 genes for A$\!\rightarrow\!$HLCD033 and 370 genes for A$\!\rightarrow\!$HLCP018 and HLCP018$\!\rightarrow\!$B, while Xenium in-domain evaluation on HLCP018 uses its native 541-gene panel.
+Two target definitions are used. Within-platform Visium HD runs use the full 18,085-gene panel available in the processed HD cell table. Cross-platform runs use only the shared genes between the train and test domains after harmonized symbol matching. In the completed experiments this yields 465 genes for A$\!\rightarrow\!$X2 and 370 genes for A$\!\rightarrow\!$X1 and X1$\!\rightarrow\!$B, while native-Xenium in-domain evaluation on X1 uses its 541-gene panel.
 
 We report the same metric bundle for every completed run: nonzero-detection F1, nonzero-rate difference, gene-wise rank Spearman, cell-wise rank Spearman (reported as transposed rank Spearman), matrix distance, energy distance, and RBF-MMD. Gene-wise and cell-wise Spearman are averaged over the evaluation genes/cells respectively. F1 and rate difference summarize sparsity recovery, while the distribution metrics quantify broader mismatch even when sparse support looks reasonable.
 
@@ -1368,7 +1368,7 @@ The strongest completed frozen-encoder configuration in this revision uses the U
 
 \subsection{Extended results for gene expression prediction}
 \noindent
-The appendix retrieval results are organized under the three standardized regimes.Two patterns are already clear. First, in-domain performance is consistently stronger than transfer, especially on the cell-wise Spearman metric. Second, cross-platform transfer remains heterogeneous: A$\!\rightarrow\!$HLCD033 is meaningfully better than A$\!\rightarrow\!$HLCP018, which is close to failure despite using the same encoder family and normalization recipe. This is exactly the kind of regime-specific behavior that motivated the benchmark.
+The appendix retrieval results are organized under the three standardized regimes. Two patterns are already clear. First, in-domain performance is consistently stronger than transfer, especially on the cell-wise Spearman metric. Second, cross-platform transfer remains heterogeneous: A$\!\rightarrow\!$X2 is meaningfully better than A$\!\rightarrow\!$X1, which is close to failure despite using the same encoder family and normalization recipe. This is exactly the kind of regime-specific behavior that motivated the benchmark.
 \noindent
 To make the organ coverage explicit, Table~\ref{tab:organ_gene_cell_coverage} summarizes the 25 organ categories represented in the current benchmark release together with their sample support, cell counts, and detected-gene coverage derived from Table~\ref{tab:all_xenium_visium_summary}. This table gives the release-wide gene-wise and cell-wise context for the benchmark protocols described above.
 
@@ -1424,7 +1424,7 @@ Xenograft & Visium HD & 1 & 263,743\\
 \end{figure}
 
 \subsection{Failure analysis and robustness notes}
-The qualitative lesson from the completed runs is that transfer difficulty is not monotonic in platform alone. K$\!\rightarrow\!$HLCD033 produces a usable shared-gene signal, while K$\!\rightarrow\!$HLCP018 collapses on both F1 and rank-based correlation. This asymmetry suggests that study-specific acquisition, tissue state, or panel composition still dominate simple platform labels. The benchmark should therefore be interpreted as a stress test for realistic generalization rather than a leaderboard on a single homogeneous target.
+The qualitative lesson from the completed runs is that transfer difficulty is not monotonic in platform alone. A$\!\rightarrow\!$X2 produces a usable shared-gene signal, while A$\!\rightarrow\!$X1 collapses on both F1 and rank-based correlation. This asymmetry suggests that study-specific acquisition, tissue state, or panel composition still dominate simple platform labels. The benchmark should therefore be interpreted as a stress test for realistic generalization rather than a leaderboard on a single homogeneous target.
 
 
 \subsection{Additional downstream analyses and use cases}
