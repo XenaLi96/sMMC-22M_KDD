@@ -386,51 +386,64 @@ coordinates and 0.053 for spatial KNN.
 \begin{table}[t]
 \centering
 \footnotesize
-\setlength{\tabcolsep}{1.5pt}
+\setlength{\tabcolsep}{1.0pt}
 \renewcommand{\arraystretch}{0.98}
 \caption{\textbf{Cell-aligned breadth benchmark across all 25 release
 categories.}
-I-P/C-P/K-P are image/coordinate/KNN Gene Pearson; I-S is image Gene Spearman;
-Cell-P is cell-wise Pearson. Bold entries mark the best Pearson baseline. H:
-human; M: mouse; ZF: zebrafish; At: \textit{A. thaliana}; Sb: soybean.
-Mouse-only rows are shaded.}
+Categories are grouped by species; mixed-species and other-organism categories
+are listed separately. Bold entries in the three Gene-Pearson columns mark the
+best of the image, coordinate-only, and spatial-KNN baselines.}
 \label{tab:breadth_25}
 \label{tab:breadth_25a}
 \label{tab:breadth_25b}
-\begin{tabular}{@{}lcrrrrrr@{}}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
 \toprule
-Category & Sp. & I-P & C-P & K-P & I-S & Cell-P & F1 \\
+& \multicolumn{3}{c}{\scriptsize Gene Pearson}
+& \multicolumn{3}{c}{\scriptsize Image prediction} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Category &
+{\scriptsize Image} &
+{\scriptsize\shortstack{Coordinate\\only}} &
+{\scriptsize\shortstack{Spatial\\KNN}} &
+{\scriptsize\shortstack{Gene\\Spearman}} &
+{\scriptsize\shortstack{Cell\\Pearson}} &
+{\scriptsize F1} \\
 \midrule
-\rowcolor{mouseblue}\textbf{Bone} & M & .030 & \textbf{.124} & .055 & .037 & .180 & .240 \\
-Brain & H+M & \textbf{.399} & .010 & .036 & .371 & .570 & .752 \\
-Breast & H & \textbf{.400} & .053 & .035 & .375 & .433 & .487 \\
-Cervical & H & \textbf{.178} & .017 & .014 & .157 & .247 & .026 \\
-\rowcolor{mouseblue}\textbf{Colon} & M & \textbf{.615} & -.137 & .072 & .588 & .739 & .744 \\
-Colorectal & H & \textbf{.431} & .056 & .083 & .419 & .532 & .623 \\
-\rowcolor{mouseblue}\textbf{Embryo} & M & \textbf{.278} & .037 & .045 & .251 & .517 & .342 \\
-Head & ZF & \textbf{.216} & .022 & .031 & .193 & .429 & .287 \\
-Heart & H & \textbf{.292} & .010 & .021 & .266 & .688 & .304 \\
-Kidney & H & \textbf{.402} & .019 & .017 & .361 & .471 & .460 \\
-Liver & H & -.002 & .003 & \textbf{.010} & -.002 & .561 & .400 \\
-Lung & H & \textbf{.359} & .065 & .053 & .317 & .402 & .457 \\
-Lymph node & H & \textbf{.141} & .043 & .013 & .131 & .164 & .023 \\
-Ovarian & H & \textbf{.250} & .122 & .104 & .239 & .312 & .234 \\
-Ovarian gl. & H & \textbf{.402} & .059 & .043 & .391 & .559 & .756 \\
-Pancreas & H & \textbf{.324} & .090 & .068 & .272 & .505 & .275 \\
-Pancreatic & H & \textbf{.366} & .080 & .051 & .341 & .540 & .694 \\
-Panc. duct gl. & H & \textbf{.331} & .091 & .100 & .282 & .408 & .386 \\
-Plant & At & -.011 & .004 & \textbf{.012} & -.009 & .385 & .052 \\
-Prostate & H & \textbf{.263} & -.015 & .025 & .244 & .263 & .083 \\
-Seed & Sb & -.020 & -.003 & \textbf{.008} & -.018 & .314 & .037 \\
-Skin & H & \textbf{.359} & .048 & .086 & .299 & .437 & .368 \\
-\rowcolor{mouseblue}\textbf{Small intestine} & M & \textbf{.572} & -.104 & .067 & .548 & .701 & .715 \\
-Tonsil & H & \textbf{.294} & .028 & .018 & .249 & .462 & .399 \\
-Xenograft & H+M & \textbf{.387} & .041 & .049 & .362 & .526 & .589 \\
+\rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Mouse organs}} \\
+Bone & .030 & \textbf{.124} & .055 & .037 & .180 & .240 \\
+Colon & \textbf{.615} & -.137 & .072 & .588 & .739 & .744 \\
+Embryo & \textbf{.278} & .037 & .045 & .251 & .517 & .342 \\
+Small intestine & \textbf{.572} & -.104 & .067 & .548 & .701 & .715 \\
+\addlinespace[2pt]
+\rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Human organs}} \\
+Breast & \textbf{.400} & .053 & .035 & .375 & .433 & .487 \\
+Cervical & \textbf{.178} & .017 & .014 & .157 & .247 & .026 \\
+Colorectal & \textbf{.431} & .056 & .083 & .419 & .532 & .623 \\
+Heart & \textbf{.292} & .010 & .021 & .266 & .688 & .304 \\
+Kidney & \textbf{.402} & .019 & .017 & .361 & .471 & .460 \\
+Liver & -.002 & .003 & \textbf{.010} & -.002 & .561 & .400 \\
+Lung & \textbf{.359} & .065 & .053 & .317 & .402 & .457 \\
+Lymph node & \textbf{.141} & .043 & .013 & .131 & .164 & .023 \\
+Ovarian & \textbf{.250} & .122 & .104 & .239 & .312 & .234 \\
+Ovarian glands & \textbf{.402} & .059 & .043 & .391 & .559 & .756 \\
+Pancreas & \textbf{.324} & .090 & .068 & .272 & .505 & .275 \\
+Pancreatic & \textbf{.366} & .080 & .051 & .341 & .540 & .694 \\
+\shortstack[l]{Pancreatic duct\\gland} & \textbf{.331} & .091 & .100 & .282 & .408 & .386 \\
+Prostate & \textbf{.263} & -.015 & .025 & .244 & .263 & .083 \\
+Skin & \textbf{.359} & .048 & .086 & .299 & .437 & .368 \\
+Tonsil & \textbf{.294} & .028 & .018 & .249 & .462 & .399 \\
+\addlinespace[2pt]
+\rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Mixed and other species}} \\
+\shortstack[l]{Brain\\(human + mouse)} & \textbf{.399} & .010 & .036 & .371 & .570 & .752 \\
+Head (zebrafish) & \textbf{.216} & .022 & .031 & .193 & .429 & .287 \\
+Plant (\textit{A. thaliana}) & -.011 & .004 & \textbf{.012} & -.009 & .385 & .052 \\
+Seed (soybean) & -.020 & -.003 & \textbf{.008} & -.018 & .314 & .037 \\
+\shortstack[l]{Xenograft\\(human + mouse)} & \textbf{.387} & .041 & .049 & .362 & .526 & .589 \\
 \midrule
-\textbf{30-sample macro} & -- & \textbf{.324} & .046 & .053 &
+\textbf{30-sample macro} & \textbf{.324} & .046 & .053 &
 \textbf{.291} & \textbf{.442} & \textbf{.413} \\
 \bottomrule
-\end{tabular}
+\end{tabular*}
 \end{table}
 
 \subsection{Resolution: From Spot-Level Prediction to Single-Cell Prediction}
