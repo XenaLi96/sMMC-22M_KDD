@@ -41,6 +41,7 @@
 \newcommand{\benchmarkname}{sMMC-22M Bench\xspace}
 \newcommand{\placeholder}[1]{\textcolor{blue}{[#1]}}
 \newcommand{\redadd}[1]{\textcolor{red}{#1}}
+\definecolor{inhouseblue}{RGB}{225,240,255}
 
 \newcommand{\wideplaceholderfigure}[2]{%
 \begin{figure*}[t]
@@ -68,7 +69,7 @@
 
 \begin{document}
 \begin{abstract}
-Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource comprising over 20 million cells across 25 organ categories, 66 studies, and multiple spatial-transcriptomic assays. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, allowing analyses such as age-band shift in ovarian samples, where age-mismatched transfer sharply reduces prediction quality despite misleading global-distance summaries. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
+Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource whose current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories, 99 unique samples (100 versioned records), and multiple spatial-transcriptomic assays. The release now includes 21 in-house DBiC-seq samples with 53{,}989 paired cells after quality control. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, allowing analyses such as age-band shift in ovarian samples, where age-mismatched transfer sharply reduces prediction quality despite misleading global-distance summaries. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
 \end{abstract}
 \maketitle
 \section{Introduction}
@@ -76,7 +77,7 @@ Spatial transcriptomics (ST) technologies measure gene expression while preservi
 
 Existing histology--omics resources have substantially advanced the field, especially HEST-1K and STimage-1K4M for paired H\&E--ST evaluation~\cite{jaume2025hest,chen2024stimage}. Their remaining limitations are best understood along three axes. First, scale is still limited relative to the diversity of organs, patients, studies, and acquisition conditions encountered in real tissue data. Second, most benchmarks remain spot-based, so each target averages multiple cells and can hide cell-level heterogeneity. Third, most resources provide image and expression pairs without sufficiently rich biological context such as age, disease state, local neighborhood organization, and cell--cell communication. These omissions make strong benchmark numbers difficult to interpret: a model may interpolate within a narrow cohort while failing under a biologically meaningful shift.
 
-We introduce \dataset as a context-aware, cell-aligned resource designed to boost ST research along exactly these three axes: \textbf{scale}, \textbf{resolution}, and \textbf{rich context}. At scale, the current release contains 23{,}943{,}826 aligned cells across 25 organ categories and 53 studies, providing enough breadth to evaluate whether larger pathology encoders produce stronger morphology--gene correspondence rather than merely stronger visual features. At resolution, each benchmark unit is an aligned cell rather than a mixed spot, which lets us convert spot-level histology--omics pipelines into single-cell predictors. At the context level, each cell is embedded in a structured record that includes histology, molecular state, spatial coordinates, neighborhood information, and sample-level attributes, making it possible to study shifts such as age-band mismatch rather than treating them as unexplained noise.
+We introduce \dataset as a context-aware, cell-aligned resource designed to boost ST research along exactly these three axes: \textbf{scale}, \textbf{resolution}, and \textbf{rich context}. At scale, the current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories and 99 unique samples (100 records), providing enough breadth to evaluate whether larger pathology encoders produce stronger morphology--gene correspondence rather than merely stronger visual features. The name \dataset is retained from the frozen release, while the versioned manifest records subsequent public and in-house additions. At resolution, each benchmark unit is an aligned cell rather than a mixed spot, which lets us convert spot-level histology--omics pipelines into single-cell predictors. At the context level, each cell is embedded in a structured record that includes histology, molecular state, spatial coordinates, neighborhood information, and sample-level attributes, making it possible to study shifts such as age-band mismatch rather than treating them as unexplained noise.
 
 We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through a new ovarian age-effect analysis showing that sample-level biological context can dominate apparent generalization: an age-mismatched target can cause large drops in F1, gene-wise correlation, cell-wise correlation, and predicted nonzero rate, while global distribution distances alone remain misleading. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are reported in the appendix.
 
@@ -146,7 +147,7 @@ STimage-1K4M & No & Yes & Partial & Partial & No & Spot-level image--gene pairin
 We describe \dataset through the same three axes emphasized in the overview figure in \Cref{fig:dataset_overview_ed}: \textbf{scale}, \textbf{resolution}, and \textbf{rich context information}. These axes motivate the experimental organization that follows, but the dataset itself must be introduced first because the experiments depend on its construction.
 
 \paragraph{Scale.}
-\dataset comprises over 20 million cells from 25 organ categories and 53 studies drawn from human and mouse tissues. It combines public experiments from Xenium and Visium HD, with Xenium accounting for the majority of samples and Visium HD contributing additional platform diversity. This breadth matters because it makes it possible to evaluate generalization across patients, samples, biological contexts, and acquisition settings rather than only within a narrow in-domain setting. The long-tail composition of the current release is detailed in \Cref{fig:dataset_scale}; complete platform-transfer stress tests are kept in the appendix rather than used as a main-text claim.
+\dataset combines public Xenium and Visium HD experiments with new in-house DBiC-seq data. The current working manifest contains 28{,}315{,}247 aligned targets from 99 unique samples (100 versioned records), spanning 25 tissue categories and three cell-line origins. This breadth matters because it makes it possible to evaluate generalization across patients, samples, biological contexts, and acquisition settings rather than only within a narrow in-domain setting. The long-tail composition of the frozen release is detailed in \Cref{fig:dataset_scale}; complete platform-transfer stress tests are kept in the appendix rather than used as a main-text claim.
 
 \paragraph{Resolution.}
 The resource is organized at true cell level rather than only at spot level. Each example is anchored to a specific cell and its tissue coordinates, allowing the data to retain fine-grained spatial provenance instead of collapsing neighboring cells into a mixed regional average. This cell-level organization is essential for defining leakage-controlled splits, tracing each record back to its study, sample, organ, platform, and coordinate system, and distinguishing local interpolation from more realistic transfer across slides or cohorts. The Visium HD bin-to-cell construction used to realize this resolution boost is illustrated in \Cref{fig:bin2cell}.
@@ -154,26 +155,26 @@ The resource is organized at true cell level rather than only at spot level. Eac
 \paragraph{Rich modality and context information.}
 Each cell is represented as a multimodal record rather than as an image crop alone. The core representation combines hierarchical histology context, a cell-level expression profile, and structured metadata, with additional spatial descriptors such as neighborhood organization and cell--cell communication features. Together, these context channels make \dataset suitable not only for histology-to-gene prediction, but also for analyses in which morphology, molecular state, sample attributes, and local tissue context must be studied jointly. The release schema for these artifacts is summarized in \Cref{tab:data_schema}.
 
-%------------table 2-----------------------%------------table 2-----------------------
 \begin{table*}[!t]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{2.6pt}
+\setlength{\tabcolsep}{1.6pt}
 \renewcommand{\arraystretch}{1.05}
 \setlength{\abovecaptionskip}{4pt}
 \setlength{\belowcaptionskip}{3pt}
 
-\caption{\textbf{sMMC-22M release manifest and benchmark coverage.}
-Reviewer and benchmark packages are derived artifacts and do not introduce additional biological samples.
-Anonymous GitHub: \protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
+\caption{\textbf{\dataset release manifest and benchmark coverage.}
+Reviewer and benchmark packages are derived artifacts and do not introduce
+additional biological samples. Anonymous GitHub:
+\protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
 \label{tab:main_release_manifest}
 
 \begin{tabularx}{\textwidth}{
->{\raggedright\arraybackslash}p{1.65cm}
->{\raggedright\arraybackslash}p{1.45cm}
->{\raggedright\arraybackslash}p{1.45cm}
->{\centering\arraybackslash}p{0.70cm}
->{\raggedleft\arraybackslash}p{0.90cm}
+>{\raggedright\arraybackslash}p{1.40cm}
+>{\raggedright\arraybackslash}p{1.35cm}
+>{\raggedright\arraybackslash}p{1.35cm}
+>{\centering\arraybackslash}p{1.05cm}
+>{\raggedleft\arraybackslash}p{1.00cm}
 >{\raggedright\arraybackslash}p{1.45cm}
 >{\raggedright\arraybackslash}X
 >{\raggedright\arraybackslash}p{1.65cm}
@@ -182,20 +183,20 @@ Anonymous GitHub: \protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
 \textbf{Block} &
 \textbf{Platform} &
 \textbf{Species} &
-\textbf{Std.} &
-\textbf{Cells} &
+\textbf{Samples} &
+\textbf{Targets} &
 \textbf{Cell unit} &
 \textbf{Benchmark coverage} &
 \textbf{Files} \\
 \midrule
 
-Full release &
-Xenium + Visium HD &
+Expanded manifest &
+Xenium + Visium HD + DBiC-seq &
 human, mouse, others &
-66 &
-23.94M &
-Aligned cell &
-In-domain, cross-patient, cross-platform, and context-shift evaluation &
+99 &
+28.32M &
+Native / derived aligned cell &
+In-domain, cross-sample, cross-platform, and context-shift evaluation &
 \texttt{manifest/} \\
 
 \addlinespace[1pt]
@@ -205,18 +206,27 @@ Xenium &
 human, mouse &
 42 &
 16.31M &
-Segmented cell &
+Native segmented cell &
 In-domain and cross-platform single-cell evaluation &
 \makecell[l]{\texttt{xenium/}\\\texttt{*.h5ad}} \\
 
 Visium HD &
 Visium HD &
 human, mouse, others &
-24 &
-7.63M &
-Bin-to-cell aligned &
-In-domain, cross-patient, and cross-platform evaluation &
+36 &
+11.95M &
+Derived bin-to-cell target &
+In-domain, cross-sample, and cross-platform evaluation &
 \makecell[l]{\texttt{visium\_hd/}\\\texttt{*.h5ad}} \\
+
+DBiC-seq &
+DBiC-seq &
+mouse / human cell lines &
+21 &
+53,989 &
+Native cell &
+In-domain and context-aware evaluation &
+\makecell[l]{\texttt{dbic\_seq/}\\\texttt{*.h5ad}} \\
 
 \midrule
 
@@ -237,7 +247,8 @@ mixed &
 -- &
 fixed &
 Split-indexed &
-In-domain benchmark for all organs; cross-patient and cross-platform protocols for eight organs &
+In-domain benchmark for all categories; multi-sample and platform-transfer
+protocols where supported &
 \makecell[l]{\texttt{splits/}\\\texttt{configs/}} \\
 
 \bottomrule
@@ -246,20 +257,90 @@ In-domain benchmark for all organs; cross-patient and cross-platform protocols f
 \vspace{1pt}
 {\footnotesize
 \emph{Notes:}
-``Std.'' denotes standardized biological datasets included in the release. ``x'' denotes cross.
-``sub.'' and ``rec.'' indicate subset-level and record-level derived artifacts, respectively.
-Cross-patient and cross-platform benchmarks are defined for eight multi-sample organs:
-human breast, human ovary, human lung,
-human pancreas, human tonsil, mouse brain,
-mouse embryo , and mouse kidney. All remaining organs are used for in-domain benchmarks.
+The 99 unique samples correspond to 100 versioned records. ``sub.'' and
+``rec.'' indicate subset-level and record-level derived artifacts,
+respectively. The platform rows sum to the expanded working manifest; exact
+provenance relative to earlier public resources is reported separately in
+\Cref{tab:main_provenance_audit}.
 \par}
 \end{table*}
-%--------------------------------------
-%--------------------------------------
 
-Gene targets are omitted from the main manifest for readability: Xenium uses panel genes, Visium HD uses processed full-transcriptome targets, and cross-platform experiments use harmonized shared genes. Full per-sample gene counts, source identifiers, QC status, and checksum-backed file paths are reported in the appendix manifest and released CSV.
+\begin{table*}[!t]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{3pt}
 
-The compact manifest in \Cref{tab:main_release_manifest} is intended to make the scale claims directly auditable from the main paper. The complete per-sample manifest remains in the appendix and release package, where each source sample is linked to its platform, organ, cell count, gene target, upstream source, license note, inclusion status, and QC outcome.
+\caption{\textbf{Provenance audit for the expanded \dataset working manifest.}
+Categories are mutually exclusive with respect to HEST-1K v1.1.0 and the
+2025-02-12 STimage-1K4M snapshot. Counts are aligned target cells after QC.
+Anonymous GitHub: \protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
+\label{tab:main_provenance_audit}
+
+\begin{tabularx}{\textwidth}{
+>{\raggedright\arraybackslash}p{3.0cm}
+>{\raggedright\arraybackslash}p{2.1cm}
+>{\raggedright\arraybackslash}X
+>{\raggedright\arraybackslash}p{2.2cm}
+>{\raggedleft\arraybackslash}p{2.2cm}
+}
+\toprule
+\textbf{Provenance block} &
+\textbf{Samples} &
+\textbf{Tissues / cell-line origins} &
+\textbf{Platforms} &
+\textbf{Aligned targets after QC} \\
+\midrule
+
+\rowcolor{inhouseblue}
+New in-house primary data &
+21 &
+mouse-embryo; cervical; lung &
+DBiC-seq &
+53{,}989 \\
+Public, overlapping HEST-1K &
+32 unique slides (33 records) &
+22 species--organ strata &
+Xenium; Visium HD &
+11{,}051{,}149 \\
+Public, overlapping STimage-1K4M only &
+2 &
+2 species--organ strata &
+Visium HD &
+213{,}405 \\
+Other public data &
+44 &
+16 species--organ strata &
+Xenium; Visium HD &
+16{,}996{,}704 \\
+\midrule
+\textbf{Total} &
+\textbf{99 unique samples (100 records)} &
+\textbf{25 tissue categories + 3 cell-line origins} &
+\textbf{Xenium; Visium HD; DBiC-seq} &
+\textbf{28{,}315{,}247} \\
+
+\bottomrule
+\end{tabularx}
+
+\vspace{2pt}
+{\footnotesize\emph{Notes:} The in-house acquisition measured 54{,}304 cells;
+QC removed 315, leaving 53{,}989 (0.1907\% of the current manifest). One
+versioned breast slide explains 99 unique samples versus 100 records. Visium HD
+profiles are derived bin-to-cell targets; Xenium and DBiC-seq provide native
+cell-aligned records.}
+\end{table*}
+
+Gene targets are omitted from the two main manifest tables for readability: Xenium uses panel genes, Visium HD uses processed full-transcriptome targets, and cross-platform experiments use harmonized shared genes. Full per-sample gene counts, source identifiers, QC status, benchmark-coverage fields, and checksum-backed file paths are reported in the appendix manifest and released CSV.
+
+The compact manifest in \Cref{tab:main_release_manifest} preserves the
+benchmark-package overview, while \Cref{tab:main_provenance_audit} makes the
+new-versus-aggregated scale claim directly auditable. The complete per-sample
+manifest remains in the appendix and release package, where each source sample
+is linked to its platform, organ, cell count, gene target, upstream source,
+license note, inclusion status, and QC outcome.
 
 
 
@@ -285,7 +366,7 @@ The next section uses these dataset properties as the main experimental logic. T
 
 \section{How \dataset Boosts Existing ST Research}
 \subsection{Scale: Large Coverage Enables Encoder Scaling Laws}
-The scale of \dataset is not only a pretraining convenience; it changes what can be measured. The release spans 23{,}943{,}826 aligned cells, 25 organ categories, and 66 studies, including 16{,}314{,}129 Xenium cells and 7{,}629{,}697 Visium HD cells. This coverage makes it possible to evaluate whether model scale and pretraining breadth improve morphology--gene correspondence under a fixed single-cell interface rather than under unrelated preprocessing pipelines. The long-tail composition and full source inventory are reported in Appendix~\ref{sec:background}, including \Cref{fig:dataset_scale,tab:all_xenium_visium_summary,tab:organ_gene_cell_coverage}.
+The scale of \dataset is not only a pretraining convenience; it changes what can be measured. The current working manifest spans 28{,}315{,}247 aligned targets, 25 tissue categories, and 99 unique samples (100 records), combining public Xenium/Visium HD resources with 21 in-house DBiC-seq samples. This coverage makes it possible to evaluate whether model scale and pretraining breadth improve morphology--gene correspondence under a fixed single-cell interface rather than under unrelated preprocessing pipelines. The long-tail composition and full source inventory are reported in Appendix~\ref{sec:background}, including \Cref{fig:dataset_scale,tab:all_xenium_visium_summary,tab:organ_gene_cell_coverage}.
 
 Following the encoder-benchmarking setup of the original study and the HEST-1K protocol~\cite{jaume2025hest}, we evaluated seven histopathology encoders under a unified frozen-embedding retrieval and prediction framework on two representative tasks: mouse brain and human lung cancer. As shown in \Cref{fig:encoder_scaling_placeholder}a, pathology foundation models consistently outperformed generic backbones. H-Optimus-0 achieved the highest average Pearson correlation on both datasets (0.567 for mouse brain and 0.449 for human lung cancer). For mouse brain, UNI obtained the strongest sensitivity and accuracy (0.807 and 0.697), while for human lung cancer, H-Optimus-0 achieved the best sensitivity and accuracy (0.643 and 0.623).
 
@@ -303,8 +384,119 @@ Finally, \Cref{fig:encoder_scaling_placeholder}c summarizes an empirical encoder
 \label{fig:encoder_scaling_placeholder}
 \end{figure*}
 
+\noindent\textbf{Breadth beyond the representative cases.}
+To test whether the scale claim extends beyond the two examples in
+\Cref{fig:encoder_scaling_placeholder}, we additionally evaluated all 25
+release categories. Genes were selected from the training partition only.
+Each run used four contiguous spatial edge holdouts and a 5\% coordinate-span
+buffer between train and test cells. \Cref{tab:breadth_25a,tab:breadth_25b}
+report the full category-level results in two readable parts. Image features
+achieve the highest Gene Pearson among image, coordinate-only, and spatial KNN
+in 21 of 25 categories; Bone, Liver, Plant, and Seed are retained as failure
+cases rather than hidden in a pooled average. The final row of
+\Cref{tab:breadth_25b} separately summarizes 30 native-Xenium samples: image
+Gene Pearson is 0.324 (sample-bootstrap 95\% CI 0.277--0.368), versus 0.046 for
+coordinates and 0.053 for spatial KNN.
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5.0pt}
+\renewcommand{\arraystretch}{1.10}
+\caption{\textbf{Per-category cell-aligned breadth benchmark (Part I).}
+Results use top-50 training-selected HVGs, four contiguous spatial holdouts,
+and a 5\% train--test buffer. Bold Gene-Pearson entries mark the best of image,
+coordinate-only, and spatial KNN.}
+\label{tab:breadth_25a}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{Gene Pearson}
+& \multicolumn{3}{c}{Image prediction} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Release category (species) & Image & Coordinate & Spatial KNN &
+Gene Spearman & Cell Pearson & F1 \\
+\midrule
+Bone (mouse) & 0.030 & \textbf{0.124} & 0.055 & 0.037 & 0.180 & 0.240 \\
+Brain (human + mouse) & \textbf{0.399} & 0.010 & 0.036 & 0.371 & 0.570 & 0.752 \\
+Breast (human) & \textbf{0.400} & 0.053 & 0.035 & 0.375 & 0.433 & 0.487 \\
+Cervical (human) & \textbf{0.178} & 0.017 & 0.014 & 0.157 & 0.247 & 0.026 \\
+Colon (mouse) & \textbf{0.615} & -0.137 & 0.072 & 0.588 & 0.739 & 0.744 \\
+Colorectal (human) & \textbf{0.431} & 0.056 & 0.083 & 0.419 & 0.532 & 0.623 \\
+Embryo (mouse) & \textbf{0.278} & 0.037 & 0.045 & 0.251 & 0.517 & 0.342 \\
+Head (zebrafish) & \textbf{0.216} & 0.022 & 0.031 & 0.193 & 0.429 & 0.287 \\
+Heart (human) & \textbf{0.292} & 0.010 & 0.021 & 0.266 & 0.688 & 0.304 \\
+Kidney (human) & \textbf{0.402} & 0.019 & 0.017 & 0.361 & 0.471 & 0.460 \\
+Liver (human) & -0.002 & 0.003 & \textbf{0.010} & -0.002 & 0.561 & 0.400 \\
+Lung (human) & \textbf{0.359} & 0.065 & 0.053 & 0.317 & 0.402 & 0.457 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{5.0pt}
+\renewcommand{\arraystretch}{1.10}
+\caption{\textbf{Per-category cell-aligned breadth benchmark (Part II).}
+The 30-sample macro is the native-Xenium summary and is not a
+cell-weighted average over the category rows.}
+\label{tab:breadth_25b}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{Gene Pearson}
+& \multicolumn{3}{c}{Image prediction} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Release category (species) & Image & Coordinate & Spatial KNN &
+Gene Spearman & Cell Pearson & F1 \\
+\midrule
+Lymph Node (human) & \textbf{0.141} & 0.043 & 0.013 & 0.131 & 0.164 & 0.023 \\
+Ovarian (human) & \textbf{0.250} & 0.122 & 0.104 & 0.239 & 0.312 & 0.234 \\
+Ovarian glands (human) & \textbf{0.402} & 0.059 & 0.043 & 0.391 & 0.559 & 0.756 \\
+Pancreas (human) & \textbf{0.324} & 0.090 & 0.068 & 0.272 & 0.505 & 0.275 \\
+Pancreatic (human) & \textbf{0.366} & 0.080 & 0.051 & 0.341 & 0.540 & 0.694 \\
+Pancreatic duct gland (human) & \textbf{0.331} & 0.091 & 0.100 & 0.282 & 0.408 & 0.386 \\
+Plant (\textit{A. thaliana}) & -0.011 & 0.004 & \textbf{0.012} & -0.009 & 0.385 & 0.052 \\
+Prostate (human) & \textbf{0.263} & -0.015 & 0.025 & 0.244 & 0.263 & 0.083 \\
+Seed (soybean) & -0.020 & -0.003 & \textbf{0.008} & -0.018 & 0.314 & 0.037 \\
+Skin (human) & \textbf{0.359} & 0.048 & 0.086 & 0.299 & 0.437 & 0.368 \\
+Small Intestine (mouse) & \textbf{0.572} & -0.104 & 0.067 & 0.548 & 0.701 & 0.715 \\
+Tonsil (human) & \textbf{0.294} & 0.028 & 0.018 & 0.249 & 0.462 & 0.399 \\
+Xenograft (human + mouse) & \textbf{0.387} & 0.041 & 0.049 & 0.362 & 0.526 & 0.589 \\
+\midrule
+\textbf{30-sample native-Xenium macro} & \textbf{0.324} & 0.046 & 0.053 &
+\textbf{0.291} & \textbf{0.442} & \textbf{0.413} \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+\noindent\textbf{Biological calibration.}
+Because a whole-panel correlation can be difficult to interpret biologically,
+we also evaluated training-selected marker/HVG overlap and
+cell-type-stratified pseudobulk profiles. As summarized in
+\Cref{tab:main_biological_calibration}, the image model preserves more
+marker-level and aggregate cell-state structure than the spatial controls.
+Cell-type labels are expression-derived, so this is an aggregate calibration
+rather than independent cell-type ground truth.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.2pt}
+\caption{\textbf{Biological calibration across 30 native-Xenium samples.}
+Lower is better for pseudobulk RMSE; higher is better otherwise.}
+\label{tab:main_biological_calibration}
+\begin{tabular}{lrrrr}
+\toprule
+Readout & Image & Coord. & KNN & Mean \\
+\midrule
+Marker/HVG Gene Pearson & 0.201 & 0.031 & 0.028 & 0.000 \\
+Cell-type pseudobulk RMSE & 0.120 & 0.224 & 0.187 & 0.188 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Resolution: From Spot-Level Prediction to Single-Cell Prediction}
-Most histology-to-gene methods are designed for spot-level prediction because current public resources and baselines are naturally organized around mixed ST spots. This setting is useful, but it also conflates cells with different states inside the same measured region. \dataset provides a resolution boost by making the benchmark unit an aligned cell: every record contains a cell footprint, cell-centered and contextual histology crops, spatial coordinates, and a cell-level molecular target. For Visium HD, we construct this unit by aggregating dense 8\,$\mu$m bins to segmented cell footprints with boundary-aware quality control; for Xenium, platform-defined cell boundaries and transcript coordinates provide the native cell unit. The complete construction is described in Appendix~\ref{sec:st} and illustrated in \Cref{fig:bin2cell}.
+Most histology-to-gene methods are designed for spot-level prediction because current public resources and baselines are naturally organized around mixed ST spots. This setting is useful, but it also conflates cells with different states inside the same measured region. \dataset provides a resolution boost by making the benchmark unit an aligned cell: every record contains a cell footprint, cell-centered and contextual histology crops, spatial coordinates, and a cell-level molecular target. For Visium HD, we construct this unit by aggregating dense 2\,$\mu$m bins to segmented cell footprints with boundary-aware quality control; for Xenium, platform-defined cell boundaries and transcript coordinates provide the native cell unit. The complete construction is described in Appendix~\ref{sec:st} and illustrated in \Cref{fig:bin2cell}.
 
 \noindent\textbf{STBoost framework.}
 Building on this cell-level interface, we introduce STBoost, a model-agnostic framework for converting spot-level histology--omics predictors into single-cell predictors. STBoost does not require a spot-level method to change its high-level learning objective; instead, it changes the benchmark interface. Spot-centered image crops and spot-level expression targets are replaced with aligned cell footprints, cell-centered histology crops, larger tissue-context crops, spatial coordinates, and cell-level molecular targets. As illustrated on the left of \Cref{fig:architecture_framework}, this conversion provides a common cell-aligned input--target format for existing spot-level or patch-level methods, including BLEEP, Hist2ST, and HisToGene-style pipelines.
@@ -342,6 +534,52 @@ Under the matched $A\!\to\!A$ regime, both BLEEP and STBoost-Ref achieve non-tri
 \noindent\textbf{Cross-patient results.}
 The stricter transfer test is patient shift from A to B. Under $A\!\to\!B$, STBoost-Ref improves over BLEEP on every reported metric, increasing F1 from 0.0857 to 0.1061, gene-wise Pearson from 0.0106 to 0.0124, gene-wise Spearman from 0.0117 to 0.0137, and cell-wise Pearson from 0.0896 to 0.2820, while reducing mean MSE from 0.1663 to 0.1504. Relative to its own in-domain score, STBoost-Ref retains 47.9\% of gene-wise Pearson and 68.6\% of cell-wise Pearson under cross-patient transfer, compared with 42.9\% and 25.9\% for BLEEP. This means that the STBoost-Ref preserves substantially more useful signal under patient shift, with 1.24$\times$ higher F1 and 3.15$\times$ higher cell-wise Pearson than BLEEP in the transferred regime.
 
+\noindent\textbf{Target-construction sensitivity.}
+The native-Xenium evidence above is separated from the Visium HD-derived
+targets used in the A/B experiment. We audited 3{,}000 raw segmentation
+polygons in each of human lung, mouse brain, and human pancreas
+(\(n=9{,}000\)). Under one-\(\mu\)m registration shifts, expression direction
+remained stable (median cosine 0.936--0.994), while bin membership and UMI totals
+changed measurably (\Cref{tab:main_hd_sensitivity}). Unsupported polygons are
+removed before release. Erosion/dilation and complete per-sample statistics are
+reported in Appendix~\ref{sec:reviewer_validation}. We therefore treat Visium
+HD profiles as derived cell-aligned targets rather than native single-cell
+ground truth.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{1.8pt}
+\caption{\textbf{Visium HD bin-assignment sensitivity.} Ranges summarize
+one-\(\mu\)m shifts in the \(x\) and \(y\) directions.}
+\label{tab:main_hd_sensitivity}
+\begin{tabular}{lrrrr}
+\toprule
+Example & Supported & Jaccard & Expr. cosine & \(|\Delta\mathrm{UMI}|\) \\
+\midrule
+Human lung & 49.4\% & .727--.733 & .954--.957 & 11.1--11.3\% \\
+Mouse brain & 97.5\% & .806--.816 & .936--.939 & 6.0--6.1\% \\
+Human pancreas & 50.0\% & .706--.714 & .994 & 13.0--13.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Cell versus pseudo-spot targets.}
+On six native-Xenium samples under matched splits and modeling, mean Gene
+Pearson was 0.365 at cell level, 0.365 at 8~\(\mu\)m, 0.363 at 16~\(\mu\)m,
+and 0.330 at 55~\(\mu\)m. The effect depended on tissue density: 55-\(\mu\)m
+pseudo-spots mixed predicted cell types extensively in dense lung but only
+rarely in non-diseased heart. This supports the narrower conclusion that
+coarse aggregation can hide heterogeneity in a density-dependent way, not that
+cell-level prediction is always numerically easier. Full results are in
+Appendix~\ref{sec:reviewer_validation}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{age.png}
+\caption{\textbf{Ovarian age-band shift analysis.} Left: accuracy and rank-correlation metrics drop sharply under age-shifted transfer. Middle: the model predicts far fewer active genes on the age-shifted target, creating a sparsity failure. Right: global distribution distances do not reliably diagnose this failure, showing why sample-level context such as age is necessary for interpreting model generalization.}
+\label{fig:ovarian_age_effect}
+\end{figure*}
 
 \subsection{Rich Context: Age-Band Shift Reveals a Hidden Failure Mode}
 The third boost is rich biological context. A cell-aligned image--expression pair is not enough to explain why a model succeeds or fails: sample-level attributes such as age, disease state, and tissue condition can change the distribution of cell states and local neighborhoods. \dataset stores these attributes with spatial and molecular records so that the benchmark can stratify failure modes rather than collapsing them into a single pooled score.
@@ -350,12 +588,36 @@ The third boost is rich biological context. A cell-aligned image--expression pai
 
 The same figure also explains why global distribution distances are insufficient. The age-shifted target has lower matrix distance and energy distance than the matched older-band target in this summary, even though its prediction quality is substantially worse. MMD is also too coarse to diagnose the sparsity collapse by itself. Rich context therefore acts as an explanatory modality: without age and sample-level metadata, this failure would look like an unexplained model weakness; with context, it becomes a measurable biological distribution shift.
 
-\begin{figure*}[t]
+\noindent\textbf{Independent condition-shift support.}
+Because age is nested within the ovarian samples and the panels differ, the
+ovarian result should be interpreted as an age-associated,
+sample-confounded case study rather than a causal age effect. We therefore add
+a separate native-Xenium skin experiment using the same spatially buffered
+protocol. Replication between two non-diseased skin sections reaches Gene
+Pearson 0.359, whereas normal/melanoma transfers reach only 0.063--0.094
+(\Cref{tab:main_skin_context}). This second experiment preserves the original
+context argument while showing that the observed collapse is not specific to
+the ovarian example.
+
+\begin{table}[t]
 \centering
-\includegraphics[width=0.98\linewidth]{age.png}
-\caption{\textbf{Ovarian age-band shift analysis.} Left: accuracy and rank-correlation metrics drop sharply under age-shifted transfer. Middle: the model predicts far fewer active genes on the age-shifted target, creating a sparsity failure. Right: global distribution distances do not reliably diagnose this failure, showing why sample-level context such as age is necessary for interpreting model generalization.}
-\label{fig:ovarian_age_effect}
-\end{figure*}
+\footnotesize
+\setlength{\tabcolsep}{1.4pt}
+\caption{\textbf{Native-Xenium skin context transfer.} Values are means across
+spatial holdouts.}
+\label{tab:main_skin_context}
+\begin{tabular}{lrrrr}
+\toprule
+Contrast & Gene P. & Gene S. & Cell P. & F1 \\
+\midrule
+Normal 1 \(\rightarrow\) Normal 2 & .359 & .300 & .428 & .345 \\
+Melanoma \(\rightarrow\) Normal 1 & .077 & .074 & .264 & .063 \\
+Melanoma \(\rightarrow\) Normal 2 & .065 & .062 & .238 & .051 \\
+Normal \(\rightarrow\) Melanoma add-on & .094 & .078 & .114 & .037 \\
+Normal \(\rightarrow\) Melanoma prime & .063 & .056 & .074 & .017 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Release, Reproducibility, and Responsible Use}
 \label{sec:release_reproducibility}
@@ -415,16 +677,32 @@ The release also inherits the long-tail structure of the underlying studies. Org
 \section{Data Source}
 \label{sec:background}
 \noindent
-In this section, we present two data sources collected from the 10x Genomics portal: \textbf{Xenium} and \textbf{Visium HD}.
+In this section, we present the two public 10x Genomics sources,
+\textbf{Xenium} and \textbf{Visium HD}, together with the newly added in-house
+\textbf{DBiC-seq} data.
 These datasets provide spatial transcriptomic information across various tissue types.
 A detailed summary is presented in Table~\ref{tab:all_xenium_visium_summary}, which lists all collections grouped by species and platform, including sample names, organ types, cell counts, tissue patch numbers, and the number of detected genes.
 
-For benchmark use, scale alone is not enough; what matters is which evaluation regimes are actually supported. The current \dataset release contains 23,943,826 aligned cells across 25 organ categories, including 16,314,129 Xenium cells and 7,629,697 Visium HD cells. Human tissue accounts for 18,579,506 cells and mouse tissue for 5,364,320 cells. In the current appendix we focus on representative benchmark subsets analyzed under the same three standardized regimes used throughout the paper: in-domain, cross-patient, and cross-platform.
+For benchmark use, scale alone is not enough; what matters is which evaluation
+regimes are actually supported. The expanded working manifest contains
+28,315,247 aligned targets from 99 unique samples (100 versioned records).
+This total includes public native-Xenium cells, derived Visium HD bin-to-cell
+targets, and 53,989 native cells from 21 in-house DBiC-seq samples after QC.
+The detailed public-source table and distribution figure below describe the
+frozen 22M release snapshot; the updated provenance totals are reported in
+Table~\ref{tab:main_release_manifest}. In the current appendix we focus on
+representative benchmark subsets analyzed under the same three standardized
+regimes used throughout the paper: in-domain, cross-patient, and
+cross-platform.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.98\linewidth]{dataset_dis.png}
-\caption{Long-tail distribution of the current \dataset release. The release spans 22M cells across 25 organ categories and 66 studies, with strong imbalance across organs and platforms. This imbalance is one reason the benchmark is reported regime-by-regime rather than as a single undifferentiated score.}
+\caption{Long-tail distribution of the frozen 22M release snapshot across 25
+organ categories and 66 source studies. The expanded working manifest is
+summarized separately in Table~\ref{tab:main_release_manifest}. The strong
+imbalance across organs and platforms is one reason the benchmark is reported
+regime-by-regime rather than as a single undifferentiated score.}
 \label{fig:dataset_scale}
 \end{figure*}
 
@@ -458,7 +736,7 @@ Unlike Xenium, Visium HD offers a higher-throughput approach for large-scale tis
 \noindent
 Together, the Xenium and Visium HD datasets form a comprehensive foundation for cell-level benchmarking, enabling systematic evaluation of foundation models for spatial transcriptomics across organs, species, and imaging resolutions.
 
-For Visium HD we start from the native 8\,$\mu$m bin grid and the full-resolution histology image supplied by the platform. Bins are registered into the slide coordinate system using the official spatial transforms, after which a cell-segmentation stage defines candidate nuclei/cells in the same coordinate frame. Cell-level expression is then obtained by aggregating bin counts to segmented cells following the official 10x/bin2cell-style workflow: bins overlapping a segmented cell are assigned to that cell; boundary cases are resolved within the segmentation workflow before aggregation; and cells without stable spatial support or valid image context are removed before patch extraction. The resulting cell table is the unit used throughout the benchmark.
+For Visium HD we start from the native 2\,$\mu$m bin grid and the full-resolution histology image supplied by the platform. Bins are registered into the slide coordinate system using the official spatial transforms, after which a cell-segmentation stage defines candidate nuclei/cells in the same coordinate frame. Cell-level expression is then obtained by aggregating bin counts to segmented cells following the official 10x/bin2cell-style workflow: bins overlapping a segmented cell are assigned to that cell; boundary cases are resolved within the segmentation workflow before aggregation; and cells without stable spatial support or valid image context are removed before patch extraction. The resulting cell table is the unit used throughout the benchmark.
 
 Platform harmonization is handled explicitly at evaluation time. Within-platform Visium HD experiments use the full 18,085-gene panel. Cross-platform evaluation is restricted to genes shared after gene-symbol harmonization between the train and test datasets, and the cached Xenium$\leftrightarrow$Visium runs additionally use shared-gene normalization before retrieval. In the completed appendix experiments this yields 465 shared genes for K$\!\rightarrow\!$HLCD033 and 370 shared genes for K$\!\rightarrow\!$HLCP018 and HLCP018$\!\rightarrow\!$D.
 
@@ -468,6 +746,22 @@ Platform harmonization is handled explicitly at evaluation time. Within-platform
 \caption{Visium HD bin-to-cell construction used by the benchmark. Starting from the native 2\,$\mu$m bins, we register molecular coordinates to the histology frame, segment cells/nuclei, aggregate overlapping bins to cells, and retain only cells that have both valid expression support and aligned image patches.}
 \label{fig:bin2cell}
 \end{figure*}
+
+\subsection{In-house DBiC-seq data}
+\label{sec:inhouse_dbic}
+\noindent
+The expanded manifest adds 21 in-house DBiC-seq samples spanning
+mouse-embryo-, cervical-cancer-, and lung-cancer-derived cell-line settings.
+DBiC-seq jointly measures spatial expression and paired cellular imaging on a
+regular grid, so these records provide native cell targets rather than
+Visium-HD-derived targets. Across the 21 samples, 54,304 cells were measured;
+QC removed 315 cells lacking complete paired information, leaving 53,989
+released aligned cells. These data account for 0.1907\% of the current
+28,315,247-target manifest. They are therefore a small but genuinely new
+primary-data contribution, complementary to the much larger aggregation of
+public data. A broader in-house collection of approximately 200,000 paired
+cells is under preparation but is not included in any count or result in this
+paper.
 
 \setcounter{figure}{3}
 
@@ -803,6 +1097,169 @@ Auxiliary annotations & CSV / JSON & cell or neighborhood & optional & captions,
 
 
 \section{Supplementary Benchmark and Analysis Results}
+\subsection{Reviewer-motivated validation and stress tests}
+\label{sec:reviewer_validation}
+
+\noindent\textbf{Common protocol.}
+The new native-Xenium campaign uses 30 samples, at most 12{,}000 spatially
+sampled cells per sample, four contiguous edge holdouts, and a 5\%
+coordinate-span train--test buffer. Target genes are selected from the training
+partition only. Samples, rather than cells, are used for macro averaging,
+bootstrap confidence intervals, and paired tests.
+
+\noindent\textbf{Training-size sensitivity.}
+On a non-diseased human-heart Xenium sample, all seven frozen encoders improve
+monotonically as the training fraction increases
+(\Cref{tab:appendix_encoder_training_size}). This reproduces the scale trend
+under a stricter spatially buffered split without exposing the internal sample
+identifier in the manuscript.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Gene-macro Pearson versus training fraction on a
+non-diseased human-heart Xenium sample.} Values average four spatial
+holdouts.}
+\label{tab:appendix_encoder_training_size}
+\begin{tabular}{lrrrr}
+\toprule
+Encoder & 5\% & 10\% & 25\% & 100\% \\
+\midrule
+ResNet-50 & .140 & .160 & .190 & .221 \\
+CTransPath & .162 & .186 & .222 & .259 \\
+Phikon & .168 & .200 & .237 & .273 \\
+CONCH & .178 & .213 & .256 & .292 \\
+UNI & .188 & .218 & .259 & .295 \\
+UNI2 & .197 & .225 & .257 & .295 \\
+H-Optimus-0 & .205 & .233 & .269 & .307 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Same-organ sample-held-out transfer.}
+Across 18 native-Xenium targets, the image model reaches Gene Pearson 0.170,
+Cell Pearson 0.275, and F1 0.125, versus approximately zero, 0.205, and 0.031
+for the training mean (\Cref{tab:appendix_sample_transfer}). Gene Pearson
+ranges from 0.016 to 0.372. Because donor identifiers are incomplete, this
+experiment is sample-held-out rather than patient-held-out.
+
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{Same-organ leave-one-sample-out macro across 18 targets.}}
+\label{tab:appendix_sample_transfer}
+\begin{tabular}{lrrrr}
+\toprule
+Model & Gene P. & Gene S. & Cell P. & F1 \\
+\midrule
+Image & .170 & .152 & .275 & .125 \\
+Training mean & .000 & -- & .205 & .031 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Method-breadth negative result.}
+We also implemented the official BLEEP projection, contrastive loss, and
+top-50 retrieval design on the same frozen CONCH inputs. This algorithm adapter
+underperforms the Ridge head in the spatially buffered benchmark
+(\Cref{tab:appendix_bleep_negative}); it is therefore reported as a negative
+method-breadth result rather than used in the main-text superiority claim.
+
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{BLEEP algorithm adapter versus Ridge across 30
+native-Xenium samples.}}
+\label{tab:appendix_bleep_negative}
+\begin{tabular}{lrrr}
+\toprule
+Metric & BLEEP adapter & Ridge & Difference \\
+\midrule
+Gene Pearson & .293 & .324 & -.031 \\
+F1 & .378 & .413 & -.035 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Pseudo-spot controls.}
+\Cref{tab:appendix_pseudospot} gives the matched six-sample summary mentioned in
+the main text. At full density, 55-\(\mu\)m regions in dense human lung contain
+mixed predicted cell types in 55.5--66.4\% of regions and include
+73.8--81.0\% of evaluated cells. The corresponding non-diseased human-heart
+ranges are only 3.5--4.1\% and 7.0--8.3\%.
+
+\begin{table}[t]
+\centering
+\small
+\caption{\textbf{Matched cell-versus-pseudo-spot Gene Pearson across six
+native-Xenium samples.}}
+\label{tab:appendix_pseudospot}
+\begin{tabular}{lrrrr}
+\toprule
+Evaluation unit & Cell & 8 \(\mu\)m & 16 \(\mu\)m & 55 \(\mu\)m \\
+\midrule
+Gene Pearson & .365 & .365 & .363 & .330 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Erosion/dilation sensitivity.}
+The registration-shift results in \Cref{tab:main_hd_sensitivity} are the least
+disruptive perturbation. Erosion and dilation change bin membership and UMI
+totals more substantially (\Cref{tab:appendix_hd_boundary}). This result
+motivates the explicit derived-target label and per-sample QC.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{\textbf{Visium HD erosion/dilation sensitivity.} Values are
+dilation/erosion medians over 3{,}000 polygons per example.}
+\label{tab:appendix_hd_boundary}
+\begin{tabular}{lrrr}
+\toprule
+Example & Bin Jaccard & Expr. cosine & \(|\Delta\mathrm{UMI}|\) \\
+\midrule
+Human lung & .622/.500 & .938/.877 & 61.0/51.0\% \\
+Mouse brain & .720/.667 & .906/.871 & 37.3/32.8\% \\
+Human pancreas & .600/.462 & .993/.981 & 66.6/54.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Eight-organ Visium HD transfer stress test.}
+The lower-performing multi-organ transfer results are retained in
+\Cref{tab:appendix_hd_transfer}. Image Gene Pearson is low in every organ
+(macro 0.015), although F1 exceeds the training mean. These derived-target
+results delimit cross-sample generalization and are not combined with the
+native-Xenium breadth result.
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Eight-organ Visium HD sample-transfer stress test.}
+Training-mean Gene Pearson is undefined.}
+\label{tab:appendix_hd_transfer}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrr@{}}
+\toprule
+Organ & Image Gene P. & Image Cell P. & Image F1 & Mean Cell P. & Mean F1 \\
+\midrule
+Human breast & .0272 & .1109 & .1794 & .1108 & .1215 \\
+Human ovary & .0267 & .4593 & .1161 & .4906 & .0561 \\
+Human lung & .0143 & .2121 & .0960 & .1455 & .0236 \\
+Human pancreas & .0040 & .0090 & .0389 & .0023 & .0168 \\
+Human tonsil & .0141 & .2769 & .0708 & .3264 & .0346 \\
+Mouse brain & .0243 & .2016 & .0623 & .2238 & .0179 \\
+Mouse embryo & .0048 & .0913 & .0369 & .1683 & .0134 \\
+Mouse kidney & .0049 & .2678 & .0513 & .4696 & .0159 \\
+\midrule
+Organ macro & .0151 & .2036 & .0815 & .2422 & .0375 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
 \subsection{STBoost framework, architecture, and training objective}
 \label{sec:STBoost_appendix_details}
 \noindent
@@ -1101,6 +1558,39 @@ The caption pipeline is grounded primarily in metadata and image-derived context
 
 To make the relevance claim concrete, we include a combined PLIP+CONCH diagnostic figure. The upper part summarizes PLIP-based sample-level image--caption similarity, while the lower part summarizes CONCH-based organ/image-directory similarity using $k=10$ captions per organ. Taken together, these views show that the metadata-grounded captions are not arbitrary text strings: matched image--caption pairs generally score higher than mismatched pairs at both the sample and organ levels, even though captioning remains an auxiliary release feature rather than a benchmark headline result.
 
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.2pt}
+\caption{\textbf{Image--caption semantic-consistency audit.} Matched pairs
+refer to the paired image--caption entries in the original similarity
+matrices. Top-$k$ accuracy records whether the matched caption is retrieved
+among an image's $k$ most similar candidates.}
+\label{tab:image_caption_alignment}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Model & Matched / other & Enrichment & AUC & Top-1 / Top-3 \\
+\midrule
+PLIP  & .262 / .053  & $4.96\times$ & .993 & 84.6\% / 100\% \\
+CONCH & .040 / .0021 & $19.1\times$ & .988 & 90.9\% / 100\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The table quantifies the positive alignment visible in
+Figure~\ref{fig:caption_similarity_human}: both independently trained
+pathology vision--language models rank the paired captions substantially above
+mismatched captions. However, a separate leakage audit also exposes an
+important limitation. Among 1,070 readable generated captions, every caption
+explicitly contained the supplied cell-type label; after literal removal of
+that label, the remaining text still recovered the label with 0.999 accuracy
+and 0.996 macro-F1. We therefore release captions only as optional,
+label-conditioned derived artifacts. They are useful for data browsing and
+multimodal method development, but they are not an independent factual
+validation target and are not used by the primary image-to-gene benchmark.
+Future caption versions should be evaluated with a label-blind prompt and an
+independent human factuality audit.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.98\linewidth]{plip_conch.png}
@@ -1225,7 +1715,7 @@ Original raw files are stored offline for certain in-house studies. Public re-do
 \textbf{Is preprocessing software available?} \\
 Yes. The code for generating multi-scale patches and gene expression transformations is available in the \textbf{\dataset GitHub repository} at \url{https://anonymous.4open.science/r/sMMC-22M-dataset-ED70}.
 
-For the benchmark tracks reported in this appendix, preprocessing is fixed rather than tuned per method. Retrieval experiments use paired 64-pixel and 256-pixel crops resized to 224 for the encoder; Visium HD uses processed cell-level expression derived from 8\,$\mu$m bins; Xenium uses platform cell tables or cached features; and communication summaries use a 200\,$\mu$m neighborhood definition. Shared-gene cross-platform benchmarks are computed from the processed release itself, not from hidden internal files, so the released assets are sufficient to reproduce the reported tables.
+For the benchmark tracks reported in this appendix, preprocessing is fixed rather than tuned per method. Retrieval experiments use paired 64-pixel and 256-pixel crops resized to 224 for the encoder; Visium HD uses processed cell-level expression derived from native 2\,$\mu$m bins; Xenium uses platform cell tables or cached features; and communication summaries use a 200\,$\mu$m neighborhood definition. Shared-gene cross-platform benchmarks are computed from the processed release itself, not from hidden internal files, so the released assets are sufficient to reproduce the reported tables.
 
 %--------------------------------------------------------------------------------------
 
