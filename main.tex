@@ -42,6 +42,7 @@
 \newcommand{\placeholder}[1]{\textcolor{blue}{[#1]}}
 \newcommand{\redadd}[1]{\textcolor{red}{#1}}
 \definecolor{inhouseblue}{RGB}{225,240,255}
+\definecolor{mouseblue}{RGB}{240,247,255}
 
 \newcommand{\wideplaceholderfigure}[2]{%
 \begin{figure*}[t]
@@ -107,37 +108,40 @@ Large pathology encoders define this benchmark's representation-learning context
 
 
 
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{3.6pt}
-\renewcommand{\arraystretch}{1.15}
-\caption{Benchmark-oriented comparison with representative resources from four categories: single-cell-only atlases, pathology image--text corpora, spot-level histology--omics resources, and \dataset. Entries are summarized using \textit{Yes}, \textit{No}, or \textit{Partial}. ``Platform transfer'' indicates whether the resource natively supports evaluation across distinct acquisition technologies or assay families.}
+\footnotesize
+\setlength{\tabcolsep}{1.5pt}
+\renewcommand{\arraystretch}{1.08}
+\caption{\textbf{Compact resource comparison.} C: cell-level; M: multi-organ;
+S: study split; P: platform transfer; T: text. \checkmark, --, and
+\(\sim\) denote yes, no, and partial support. Row groups indicate the primary
+resource intent.}
 \label{tab:resource_comparison_ed}
-\begin{tabular}{lcccccc}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-Dataset & Cell-level & Multi-organ & Study split & Platform transfer & Text & Benchmark intent \\
+Resource & C & M & S & P & T \\
 \midrule
 \rowcolor[gray]{0.94}
-\multicolumn{7}{l}{\textit{Single-cell-only atlases}} \\
-CELLxGENE Census & Yes & Yes & Yes & No & No & Single-cell atlas (no paired histology) \\
+\multicolumn{6}{l}{\textit{Single-cell-only atlas}} \\
+CELLxGENE Census & \checkmark & \checkmark & \checkmark & -- & -- \\
 \addlinespace[2pt]
 \rowcolor[gray]{0.94}
-\multicolumn{7}{l}{\textit{Pathology image--text corpora}} \\
-OpenPath & No & Partial & No & No & Yes & Pathology image--text pretraining \\
-Quilt-1M & No & Partial & No & No & Yes & Patch-level image--text pretraining \\
-PathGen-1.6M & No & Partial & No & No & Yes & Synthetic pathology image--text pretraining \\
+\multicolumn{6}{l}{\textit{Pathology image--text corpora}} \\
+OpenPath & -- & \(\sim\) & -- & -- & \checkmark \\
+Quilt-1M & -- & \(\sim\) & -- & -- & \checkmark \\
+PathGen-1.6M & -- & \(\sim\) & -- & -- & \checkmark \\
 \addlinespace[2pt]
 \rowcolor[gray]{0.94}
-\multicolumn{7}{l}{\textit{ST + histology resources}} \\
-HEST-1K & No & Yes & Yes & Partial & No & Spot-level ST + histology benchmarking \\
-STimage-1K4M & No & Yes & Partial & Partial & No & Spot-level image--gene pairing from ST slides \\
+\multicolumn{6}{l}{\textit{ST + histology resources}} \\
+HEST-1K & -- & \checkmark & \checkmark & \(\sim\) & -- \\
+STimage-1K4M & -- & \checkmark & \(\sim\) & \(\sim\) & -- \\
 \addlinespace[2pt]
 \rowcolor[rgb]{0.90,0.95,1.00}
-\textbf{\dataset} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} & \textbf{Partial} & \textbf{Single-cell evaluation} \\
+\textbf{\dataset} & \checkmark & \checkmark & \checkmark & \checkmark & \(\sim\) \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 \section{The \dataset Resource}
 \subsection{Design Objectives}
@@ -157,190 +161,145 @@ Each cell is represented as a multimodal record rather than as an image crop alo
 
 \begin{table*}[!t]
 \centering
-\scriptsize
-\setlength{\tabcolsep}{1.6pt}
-\renewcommand{\arraystretch}{1.05}
+\footnotesize
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.04}
 \setlength{\abovecaptionskip}{4pt}
 \setlength{\belowcaptionskip}{3pt}
 
-\caption{\textbf{\dataset release manifest and benchmark coverage.}
-Reviewer and benchmark packages are derived artifacts and do not introduce
-additional biological samples. Anonymous GitHub:
-\protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
+\caption{\textbf{Combined release, benchmark-coverage, and provenance audit.}
+The upper block preserves the release interface; the lower block partitions
+the 99 unique samples into mutually exclusive provenance groups relative to
+HEST-1K v1.1.0 and the 2025-02-12 STimage-1K4M snapshot. Counts are aligned
+targets after QC.}
 \label{tab:main_release_manifest}
-
-\begin{tabularx}{\textwidth}{
->{\raggedright\arraybackslash}p{1.40cm}
->{\raggedright\arraybackslash}p{1.35cm}
->{\raggedright\arraybackslash}p{1.35cm}
->{\centering\arraybackslash}p{1.05cm}
->{\raggedleft\arraybackslash}p{1.00cm}
->{\raggedright\arraybackslash}p{1.45cm}
->{\raggedright\arraybackslash}X
->{\raggedright\arraybackslash}p{1.65cm}
-}
-\toprule
-\textbf{Block} &
-\textbf{Platform} &
-\textbf{Species} &
-\textbf{Samples} &
-\textbf{Targets} &
-\textbf{Cell unit} &
-\textbf{Benchmark coverage} &
-\textbf{Files} \\
-\midrule
-
-Expanded manifest &
-Xenium + Visium HD + DBiC-seq &
-human, mouse, others &
-99 &
-28.32M &
-Native / derived aligned cell &
-In-domain, cross-sample, cross-platform, and context-shift evaluation &
-\texttt{manifest/} \\
-
-\addlinespace[1pt]
-
-Xenium &
-Xenium &
-human, mouse &
-42 &
-16.31M &
-Native segmented cell &
-In-domain and cross-platform single-cell evaluation &
-\makecell[l]{\texttt{xenium/}\\\texttt{*.h5ad}} \\
-
-Visium HD &
-Visium HD &
-human, mouse, others &
-36 &
-11.95M &
-Derived bin-to-cell target &
-In-domain, cross-sample, and cross-platform evaluation &
-\makecell[l]{\texttt{visium\_hd/}\\\texttt{*.h5ad}} \\
-
-DBiC-seq &
-DBiC-seq &
-mouse / human cell lines &
-21 &
-53,989 &
-Native cell &
-In-domain and context-aware evaluation &
-\makecell[l]{\texttt{dbic\_seq/}\\\texttt{*.h5ad}} \\
-
-\midrule
-
-\rowcolor{gray!8}
-Reviewer subset &
-Mixed &
-derived &
-sub. &
-rec. &
-Cell-aligned &
-Smoke testing and lightweight figure/table regeneration &
-\makecell[l]{\texttt{review\_}\\\texttt{subset/}} \\
-
-\rowcolor{gray!8}
-Benchmark package &
-Mixed &
-mixed &
--- &
-fixed &
-Split-indexed &
-In-domain benchmark for all categories; multi-sample and platform-transfer
-protocols where supported &
-\makecell[l]{\texttt{splits/}\\\texttt{configs/}} \\
-
-\bottomrule
-\end{tabularx}
-
-\vspace{1pt}
-{\footnotesize
-\emph{Notes:}
-The 99 unique samples correspond to 100 versioned records. ``sub.'' and
-``rec.'' indicate subset-level and record-level derived artifacts,
-respectively. The platform rows sum to the expanded working manifest; exact
-provenance relative to earlier public resources is reported separately in
-\Cref{tab:main_provenance_audit}.
-\par}
-\end{table*}
-
-\begin{table*}[!t]
-\centering
-\small
-\setlength{\tabcolsep}{4.5pt}
-\renewcommand{\arraystretch}{1.08}
-\setlength{\abovecaptionskip}{4pt}
-\setlength{\belowcaptionskip}{3pt}
-
-\caption{\textbf{Provenance audit for the expanded \dataset working manifest.}
-Categories are mutually exclusive with respect to HEST-1K v1.1.0 and the
-2025-02-12 STimage-1K4M snapshot. Counts are aligned target cells after QC.
-Anonymous GitHub: \protect\url{https://anonymous.4open.science/r/sMMC-22M-DB75}}
 \label{tab:main_provenance_audit}
 
 \begin{tabularx}{\textwidth}{
->{\raggedright\arraybackslash}p{3.0cm}
->{\raggedright\arraybackslash}p{2.1cm}
+>{\raggedright\arraybackslash}p{2.25cm}
+>{\raggedright\arraybackslash}p{1.35cm}
+>{\raggedright\arraybackslash}p{2.15cm}
+>{\raggedright\arraybackslash}p{1.65cm}
+>{\raggedright\arraybackslash}p{1.75cm}
+>{\raggedleft\arraybackslash}p{1.45cm}
 >{\raggedright\arraybackslash}X
->{\raggedright\arraybackslash}p{2.2cm}
->{\raggedleft\arraybackslash}p{2.2cm}
 }
 \toprule
-\textbf{Provenance block} &
+\textbf{Block} &
 \textbf{Samples} &
-\textbf{Tissues / cell-line origins} &
-\textbf{Platforms} &
-\textbf{Aligned targets after QC} \\
+\textbf{Scope} &
+\textbf{Platform} &
+\textbf{Cell / target unit} &
+\textbf{Targets} &
+\textbf{Coverage or provenance note} \\
 \midrule
-
+\rowcolor{gray!12}
+\multicolumn{7}{l}{\textit{Release interface and benchmark coverage}} \\
+Expanded manifest &
+99 unique (100 records) &
+25 tissue categories + 3 cell-line origins &
+Xenium; Visium HD; DBiC-seq &
+Native / derived aligned target &
+28{,}315{,}247 &
+In-domain, cross-sample, cross-platform, and context-shift evaluation \\
+Xenium source block &
+42 &
+human and mouse tissues &
+Xenium &
+Native segmented cell &
+16.31M &
+In-domain and cross-platform single-cell evaluation \\
+Visium HD source block &
+36 &
+human, mouse, and other species &
+Visium HD &
+Derived bin-to-cell target &
+11.95M &
+In-domain, cross-sample, and cross-platform evaluation \\
+DBiC-seq source block &
+21 &
+mouse / human cell-line origins &
+DBiC-seq &
+Native cell &
+53,989 &
+In-domain and context-aware evaluation \\
+Reviewer subset &
+sub. &
+review records &
+Mixed &
+Cell-aligned &
+rec. &
+Smoke testing and lightweight figure/table regeneration \\
+Benchmark package &
+-- &
+all supported categories &
+Mixed &
+Split-indexed &
+fixed &
+In-domain for all categories; transfer protocols where supported \\
+\midrule
+\rowcolor{gray!12}
+\multicolumn{7}{l}{\textit{Mutually exclusive provenance audit}} \\
 \rowcolor{inhouseblue}
 New in-house primary data &
 21 &
 mouse-embryo; cervical; lung &
 DBiC-seq &
-53{,}989 \\
+Native cell &
+53{,}989 &
+Genuinely new primary data; 54{,}304 measured and 315 removed by QC \\
 Public, overlapping HEST-1K &
 32 unique slides (33 records) &
 22 species--organ strata &
 Xenium; Visium HD &
-11{,}051{,}149 \\
+Native / derived &
+11{,}051{,}149 &
+Public aggregation overlapping HEST-1K \\
 Public, overlapping STimage-1K4M only &
 2 &
 2 species--organ strata &
 Visium HD &
-213{,}405 \\
+Derived bin-to-cell &
+213{,}405 &
+Public aggregation unique to the STimage comparison \\
 Other public data &
 44 &
 16 species--organ strata &
 Xenium; Visium HD &
-16{,}996{,}704 \\
+Native / derived &
+16{,}996{,}704 &
+Other public aggregation \\
 \midrule
 \textbf{Total} &
 \textbf{99 unique samples (100 records)} &
 \textbf{25 tissue categories + 3 cell-line origins} &
 \textbf{Xenium; Visium HD; DBiC-seq} &
-\textbf{28{,}315{,}247} \\
-
+\textbf{Native / derived} &
+\textbf{28{,}315{,}247} &
+\textbf{0.1907\% new primary targets} \\
 \bottomrule
 \end{tabularx}
 
-\vspace{2pt}
-{\footnotesize\emph{Notes:} The in-house acquisition measured 54{,}304 cells;
-QC removed 315, leaving 53{,}989 (0.1907\% of the current manifest). One
-versioned breast slide explains 99 unique samples versus 100 records. Visium HD
-profiles are derived bin-to-cell targets; Xenium and DBiC-seq provide native
-cell-aligned records.}
+\vspace{1pt}
+{\scriptsize\emph{Notes:} ``sub.'' and ``rec.'' denote subset- and
+record-level derived artifacts. One versioned breast slide explains 99 unique
+samples versus 100 records. Anonymous release:
+\url{https://anonymous.4open.science/r/sMMC-22M-DB75}.}
 \end{table*}
 
-Gene targets are omitted from the two main manifest tables for readability: Xenium uses panel genes, Visium HD uses processed full-transcriptome targets, and cross-platform experiments use harmonized shared genes. Full per-sample gene counts, source identifiers, QC status, benchmark-coverage fields, and checksum-backed file paths are reported in the appendix manifest and released CSV.
+Gene targets are omitted from the combined manifest table for readability:
+Xenium uses panel genes, Visium HD uses processed full-transcriptome targets,
+and cross-platform experiments use harmonized shared genes. Full per-sample
+gene counts, source identifiers, QC status, benchmark-coverage fields, and
+checksum-backed file paths are reported in the appendix manifest and released
+CSV.
 
-The compact manifest in \Cref{tab:main_release_manifest} preserves the
-benchmark-package overview, while \Cref{tab:main_provenance_audit} makes the
-new-versus-aggregated scale claim directly auditable. The complete per-sample
-manifest remains in the appendix and release package, where each source sample
-is linked to its platform, organ, cell count, gene target, upstream source,
-license note, inclusion status, and QC outcome.
+The combined audit in \Cref{tab:main_release_manifest} preserves the
+benchmark-package overview and makes the new-versus-aggregated scale claim
+directly auditable. The complete per-sample manifest remains in the appendix
+and release package, where each source sample is linked to its platform, organ,
+cell count, gene target, upstream source, license note, inclusion status, and
+QC outcome.
 
 
 
@@ -384,91 +343,6 @@ Finally, \Cref{fig:encoder_scaling_placeholder}c summarizes an empirical encoder
 \label{fig:encoder_scaling_placeholder}
 \end{figure*}
 
-\noindent\textbf{Breadth beyond the representative cases.}
-To test whether the scale claim extends beyond the two examples in
-\Cref{fig:encoder_scaling_placeholder}, we additionally evaluated all 25
-release categories. Genes were selected from the training partition only.
-Each run used four contiguous spatial edge holdouts and a 5\% coordinate-span
-buffer between train and test cells. \Cref{tab:breadth_25a,tab:breadth_25b}
-report the full category-level results in two readable parts. Image features
-achieve the highest Gene Pearson among image, coordinate-only, and spatial KNN
-in 21 of 25 categories; Bone, Liver, Plant, and Seed are retained as failure
-cases rather than hidden in a pooled average. The final row of
-\Cref{tab:breadth_25b} separately summarizes 30 native-Xenium samples: image
-Gene Pearson is 0.324 (sample-bootstrap 95\% CI 0.277--0.368), versus 0.046 for
-coordinates and 0.053 for spatial KNN.
-
-\begin{table*}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5.0pt}
-\renewcommand{\arraystretch}{1.10}
-\caption{\textbf{Per-category cell-aligned breadth benchmark (Part I).}
-Results use top-50 training-selected HVGs, four contiguous spatial holdouts,
-and a 5\% train--test buffer. Bold Gene-Pearson entries mark the best of image,
-coordinate-only, and spatial KNN.}
-\label{tab:breadth_25a}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
-\toprule
-& \multicolumn{3}{c}{Gene Pearson}
-& \multicolumn{3}{c}{Image prediction} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}
-Release category (species) & Image & Coordinate & Spatial KNN &
-Gene Spearman & Cell Pearson & F1 \\
-\midrule
-Bone (mouse) & 0.030 & \textbf{0.124} & 0.055 & 0.037 & 0.180 & 0.240 \\
-Brain (human + mouse) & \textbf{0.399} & 0.010 & 0.036 & 0.371 & 0.570 & 0.752 \\
-Breast (human) & \textbf{0.400} & 0.053 & 0.035 & 0.375 & 0.433 & 0.487 \\
-Cervical (human) & \textbf{0.178} & 0.017 & 0.014 & 0.157 & 0.247 & 0.026 \\
-Colon (mouse) & \textbf{0.615} & -0.137 & 0.072 & 0.588 & 0.739 & 0.744 \\
-Colorectal (human) & \textbf{0.431} & 0.056 & 0.083 & 0.419 & 0.532 & 0.623 \\
-Embryo (mouse) & \textbf{0.278} & 0.037 & 0.045 & 0.251 & 0.517 & 0.342 \\
-Head (zebrafish) & \textbf{0.216} & 0.022 & 0.031 & 0.193 & 0.429 & 0.287 \\
-Heart (human) & \textbf{0.292} & 0.010 & 0.021 & 0.266 & 0.688 & 0.304 \\
-Kidney (human) & \textbf{0.402} & 0.019 & 0.017 & 0.361 & 0.471 & 0.460 \\
-Liver (human) & -0.002 & 0.003 & \textbf{0.010} & -0.002 & 0.561 & 0.400 \\
-Lung (human) & \textbf{0.359} & 0.065 & 0.053 & 0.317 & 0.402 & 0.457 \\
-\bottomrule
-\end{tabular*}
-\end{table*}
-
-\begin{table*}[t]
-\centering
-\small
-\setlength{\tabcolsep}{5.0pt}
-\renewcommand{\arraystretch}{1.10}
-\caption{\textbf{Per-category cell-aligned breadth benchmark (Part II).}
-The 30-sample macro is the native-Xenium summary and is not a
-cell-weighted average over the category rows.}
-\label{tab:breadth_25b}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
-\toprule
-& \multicolumn{3}{c}{Gene Pearson}
-& \multicolumn{3}{c}{Image prediction} \\
-\cmidrule(lr){2-4}\cmidrule(lr){5-7}
-Release category (species) & Image & Coordinate & Spatial KNN &
-Gene Spearman & Cell Pearson & F1 \\
-\midrule
-Lymph Node (human) & \textbf{0.141} & 0.043 & 0.013 & 0.131 & 0.164 & 0.023 \\
-Ovarian (human) & \textbf{0.250} & 0.122 & 0.104 & 0.239 & 0.312 & 0.234 \\
-Ovarian glands (human) & \textbf{0.402} & 0.059 & 0.043 & 0.391 & 0.559 & 0.756 \\
-Pancreas (human) & \textbf{0.324} & 0.090 & 0.068 & 0.272 & 0.505 & 0.275 \\
-Pancreatic (human) & \textbf{0.366} & 0.080 & 0.051 & 0.341 & 0.540 & 0.694 \\
-Pancreatic duct gland (human) & \textbf{0.331} & 0.091 & 0.100 & 0.282 & 0.408 & 0.386 \\
-Plant (\textit{A. thaliana}) & -0.011 & 0.004 & \textbf{0.012} & -0.009 & 0.385 & 0.052 \\
-Prostate (human) & \textbf{0.263} & -0.015 & 0.025 & 0.244 & 0.263 & 0.083 \\
-Seed (soybean) & -0.020 & -0.003 & \textbf{0.008} & -0.018 & 0.314 & 0.037 \\
-Skin (human) & \textbf{0.359} & 0.048 & 0.086 & 0.299 & 0.437 & 0.368 \\
-Small Intestine (mouse) & \textbf{0.572} & -0.104 & 0.067 & 0.548 & 0.701 & 0.715 \\
-Tonsil (human) & \textbf{0.294} & 0.028 & 0.018 & 0.249 & 0.462 & 0.399 \\
-Xenograft (human + mouse) & \textbf{0.387} & 0.041 & 0.049 & 0.362 & 0.526 & 0.589 \\
-\midrule
-\textbf{30-sample native-Xenium macro} & \textbf{0.324} & 0.046 & 0.053 &
-\textbf{0.291} & \textbf{0.442} & \textbf{0.413} \\
-\bottomrule
-\end{tabular*}
-\end{table*}
-
 \noindent\textbf{Biological calibration.}
 Because a whole-panel correlation can be difficult to interpret biologically,
 we also evaluated training-selected marker/HVG overlap and
@@ -491,6 +365,70 @@ Readout & Image & Coord. & KNN & Mean \\
 \midrule
 Marker/HVG Gene Pearson & 0.201 & 0.031 & 0.028 & 0.000 \\
 Cell-type pseudobulk RMSE & 0.120 & 0.224 & 0.187 & 0.188 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Breadth beyond the representative cases.}
+To test whether the scale claim extends beyond the two examples in
+\Cref{fig:encoder_scaling_placeholder}, we additionally evaluated all 25
+release categories. Genes were selected from the training partition only.
+Each run used four contiguous spatial edge holdouts and a 5\% coordinate-span
+buffer between train and test cells. \Cref{tab:breadth_25}
+reports the full category-level results. Image features
+achieve the highest Gene Pearson among image, coordinate-only, and spatial KNN
+in 21 of 25 categories; Bone, Liver, Plant, and Seed are retained as failure
+cases rather than hidden in a pooled average. The final row separately
+summarizes 30 native-Xenium samples: image
+Gene Pearson is 0.324 (sample-bootstrap 95\% CI 0.277--0.368), versus 0.046 for
+coordinates and 0.053 for spatial KNN.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{1.5pt}
+\renewcommand{\arraystretch}{0.98}
+\caption{\textbf{Cell-aligned breadth benchmark across all 25 release
+categories.}
+I-P/C-P/K-P are image/coordinate/KNN Gene Pearson; I-S is image Gene Spearman;
+Cell-P is cell-wise Pearson. Bold entries mark the best Pearson baseline. H:
+human; M: mouse; ZF: zebrafish; At: \textit{A. thaliana}; Sb: soybean.
+Mouse-only rows are shaded.}
+\label{tab:breadth_25}
+\label{tab:breadth_25a}
+\label{tab:breadth_25b}
+\begin{tabular}{@{}lcrrrrrr@{}}
+\toprule
+Category & Sp. & I-P & C-P & K-P & I-S & Cell-P & F1 \\
+\midrule
+\rowcolor{mouseblue}\textbf{Bone} & M & .030 & \textbf{.124} & .055 & .037 & .180 & .240 \\
+Brain & H+M & \textbf{.399} & .010 & .036 & .371 & .570 & .752 \\
+Breast & H & \textbf{.400} & .053 & .035 & .375 & .433 & .487 \\
+Cervical & H & \textbf{.178} & .017 & .014 & .157 & .247 & .026 \\
+\rowcolor{mouseblue}\textbf{Colon} & M & \textbf{.615} & -.137 & .072 & .588 & .739 & .744 \\
+Colorectal & H & \textbf{.431} & .056 & .083 & .419 & .532 & .623 \\
+\rowcolor{mouseblue}\textbf{Embryo} & M & \textbf{.278} & .037 & .045 & .251 & .517 & .342 \\
+Head & ZF & \textbf{.216} & .022 & .031 & .193 & .429 & .287 \\
+Heart & H & \textbf{.292} & .010 & .021 & .266 & .688 & .304 \\
+Kidney & H & \textbf{.402} & .019 & .017 & .361 & .471 & .460 \\
+Liver & H & -.002 & .003 & \textbf{.010} & -.002 & .561 & .400 \\
+Lung & H & \textbf{.359} & .065 & .053 & .317 & .402 & .457 \\
+Lymph node & H & \textbf{.141} & .043 & .013 & .131 & .164 & .023 \\
+Ovarian & H & \textbf{.250} & .122 & .104 & .239 & .312 & .234 \\
+Ovarian gl. & H & \textbf{.402} & .059 & .043 & .391 & .559 & .756 \\
+Pancreas & H & \textbf{.324} & .090 & .068 & .272 & .505 & .275 \\
+Pancreatic & H & \textbf{.366} & .080 & .051 & .341 & .540 & .694 \\
+Panc. duct gl. & H & \textbf{.331} & .091 & .100 & .282 & .408 & .386 \\
+Plant & At & -.011 & .004 & \textbf{.012} & -.009 & .385 & .052 \\
+Prostate & H & \textbf{.263} & -.015 & .025 & .244 & .263 & .083 \\
+Seed & Sb & -.020 & -.003 & \textbf{.008} & -.018 & .314 & .037 \\
+Skin & H & \textbf{.359} & .048 & .086 & .299 & .437 & .368 \\
+\rowcolor{mouseblue}\textbf{Small intestine} & M & \textbf{.572} & -.104 & .067 & .548 & .701 & .715 \\
+Tonsil & H & \textbf{.294} & .028 & .018 & .249 & .462 & .399 \\
+Xenograft & H+M & \textbf{.387} & .041 & .049 & .362 & .526 & .589 \\
+\midrule
+\textbf{30-sample macro} & -- & \textbf{.324} & .046 & .053 &
+\textbf{.291} & \textbf{.442} & \textbf{.413} \\
 \bottomrule
 \end{tabular}
 \end{table}
