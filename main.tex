@@ -1,19 +1,12 @@
-\documentclass{article}
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[sigconf,review]{acmart}
 
-\usepackage[eandd,nonatbib]{neurips_2026}
-
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{hyperref}
-\usepackage{url}
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{nicefrac}
 \usepackage{microtype}
 \usepackage{textcomp}
-\usepackage{xcolor}
 \usepackage{makecell}
-\usepackage{times}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -23,22 +16,16 @@
 \usepackage{colortbl}
 \usepackage{xspace}
 \usepackage{enumitem}
-\usepackage{tocloft}
-\usepackage{caption}
-\usepackage{subcaption}
 \usepackage{placeins}
 \usepackage{tabularx}
 \usepackage{float}
-\usepackage[table]{xcolor}
 \usepackage[capitalize]{cleveref}
 
 \graphicspath{{appendix_image/}{./}}
 
 \hypersetup{
-  pagebackref=true,
   breaklinks=true,
-  colorlinks=true,
-  bookmarks=false
+  colorlinks=true
 }
 
 \crefname{section}{Sec.}{Secs.}
@@ -47,19 +34,6 @@
 \Crefname{table}{Table}{Tables}
 \crefname{figure}{Fig.}{Figs.}
 \Crefname{figure}{Figure}{Figures}
-
-\setcounter{topnumber}{5}
-\setcounter{bottomnumber}{5}
-\setcounter{totalnumber}{10}
-\renewcommand{\topfraction}{0.95}
-\renewcommand{\bottomfraction}{0.95}
-\renewcommand{\textfraction}{0.05}
-\renewcommand{\floatpagefraction}{0.8}
-\renewcommand{\dbltopfraction}{0.95}
-\renewcommand{\dblfloatpagefraction}{0.8}
-\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
-\setlength{\floatsep}{8pt plus 2pt minus 2pt}
-\setlength{\intextsep}{10pt plus 2pt minus 2pt}
 
 \newcommand{\dataset}{sMMC-22M\xspace}
 \newcommand{\methodname}{STBoost\xspace}
@@ -75,14 +49,28 @@
 \caption{#2}
 \end{figure*}}
 
-\title{\textbf{\dataset}: A Context-Aware Dataset and Benchmark for Single-Cell Spatial Transcriptomics}
+% KDD Datasets & Benchmarks Track is single-blind. Replace the empty author
+% block below with the complete author and affiliation information before
+% submission.
+\setcopyright{none}
+\settopmatter{printacmref=false}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\citestyle{acmnumeric}
+\acmConference[KDD Datasets \& Benchmarks Track]
+  {ACM SIGKDD Conference on Knowledge Discovery and Data Mining,
+   Datasets \& Benchmarks Track}
+  {Submission}
+  {}
+\setlength{\emergencystretch}{2em}
+
+\title{\dataset: A Context-Aware Dataset and Benchmark for Single-Cell Spatial Transcriptomics}
 \author{}
 
 \begin{document}
-\maketitle
 \begin{abstract}
 Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource comprising over 20 million cells across 25 organ categories, 66 studies, and multiple spatial-transcriptomic assays. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, allowing analyses such as age-band shift in ovarian samples, where age-mismatched transfer sharply reduces prediction quality despite misleading global-distance summaries. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
 \end{abstract}
+\maketitle
 \section{Introduction}
 Spatial transcriptomics (ST) technologies measure gene expression while preserving tissue coordinates, making it possible to ask whether histology can recover molecular state in situ. H\&E images provide a high-resolution structural view of the same tissue, capturing cellular morphology, tissue architecture, and microenvironmental organization. The central modeling question is therefore no longer whether histology contains molecular signal in principle, but whether current datasets and benchmarks can measure that signal under realistic biological variation.
 
@@ -384,10 +372,8 @@ This framing also changes how benchmark results should be read. A high in-domain
 \section{Conclusion}
 We presented \dataset as a cell-aligned, context-aware resource that boosts ST research along three axes: scale, resolution, and rich biological context. Scale enables controlled encoder benchmarking and reveals foundation-model scaling behavior for morphology--gene correspondence. Resolution enables a practical framework for converting spot-level histology--omics methods into single-cell predictors, evaluated under strict in-domain and cross-patient splits. Rich context exposes biologically meaningful failures, including age-band transfer collapse in ovarian samples, that global distances alone can miss. Together, these results position \dataset and \methodname as a more realistic basis for single-cell histology-to-molecular modeling while keeping unresolved generalization challenges visible.
 
-{\small
-\bibliographystyle{unsrt}
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{egbib}
-}
 
 
 
@@ -419,7 +405,7 @@ All resources in \textit{\dataset} are released strictly for \textbf{research us
 All personally identifiable information—such as patient names, addresses, and social security numbers—has been removed. Users are \textbf{prohibited} from attempting to recover private information through reverse engineering or related techniques. When used under these conditions, no evidence of social or ethical risks has been found.
 
 All data and code are hosted on our
-\href{https://anonymous.4open.science/r/\dataset-dataset-ED70}{GitHub repository} with detailed \texttt{README} and tutorials. Users may download the full dataset or specific subsets (e.g., by cancer type) and reproduce all experiments following the provided guidelines.
+\href{https://anonymous.4open.science/r/sMMC-22M-dataset-ED70}{GitHub repository} with detailed \texttt{README} and tutorials. Users may download the full dataset or specific subsets (e.g., by cancer type) and reproduce all experiments following the provided guidelines.
 
 The appendix release distinguishes between \emph{public source studies}, \emph{processed derivatives}, and \emph{newly generated benchmark artifacts}. Public Xenium and Visium HD studies remain governed by their upstream portal and study-specific terms. Cell-aligned patches, harmonized expression matrices, split files, captions, and communication-graph summaries are processed derivatives or generated artifacts released for non-diagnostic research use. Clinical deployment, patient re-identification, and any safety-critical decision making are explicitly prohibited.
 
@@ -1237,7 +1223,7 @@ Original raw files are stored offline for certain in-house studies. Public re-do
 
 \noindent
 \textbf{Is preprocessing software available?} \\
-Yes. The code for generating multi-scale patches and gene expression transformations is available in the \textbf{\dataset GitHub repository} at \url{https://anonymous.4open.science/r/\dataset-dataset-ED70}.
+Yes. The code for generating multi-scale patches and gene expression transformations is available in the \textbf{\dataset GitHub repository} at \url{https://anonymous.4open.science/r/sMMC-22M-dataset-ED70}.
 
 For the benchmark tracks reported in this appendix, preprocessing is fixed rather than tuned per method. Retrieval experiments use paired 64-pixel and 256-pixel crops resized to 224 for the encoder; Visium HD uses processed cell-level expression derived from 8\,$\mu$m bins; Xenium uses platform cell tables or cached features; and communication summaries use a 200\,$\mu$m neighborhood definition. Shared-gene cross-platform benchmarks are computed from the processed release itself, not from hidden internal files, so the released assets are sufficient to reproduce the reported tables.
 
@@ -1248,7 +1234,7 @@ For the benchmark tracks reported in this appendix, preprocessing is fixed rathe
 \textbf{How is the dataset distributed?} \\
 All data (images, expression files, metadata, tutorials) are hosted on GitHub:
 \begin{center}
-\url{https://anonymous.4open.science/r/\dataset-dataset-ED70}
+\url{https://anonymous.4open.science/r/sMMC-22M-dataset-ED70}
 \end{center}
 
 \noindent
