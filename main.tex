@@ -120,6 +120,17 @@
 Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource whose current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories, 99 unique samples (100 versioned records), and multiple spatial-transcriptomic assays. The release now includes 21 in-house DBiC-seq samples with 53{,}989 paired cells after quality control. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, enabling support-aware audits and adaptation under age, disease, study, sample, and platform shifts rather than relying only on pooled performance. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
 \end{abstract}
 \maketitle
+
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.98\linewidth]{dataset.png}
+    \caption{Overview of \dataset. The figure summarizes the scale of the resource, the multimodal structure of each record, and the single-cell alignment between histology context and molecular measurements.}
+    \label{fig:dataset_overview_ed}
+\end{figure*}
+
+
 \section{Introduction}
 Spatial transcriptomics (ST) technologies measure gene expression while preserving tissue coordinates, making it possible to ask whether histology can recover molecular state in situ. H\&E images provide a high-resolution structural view of the same tissue, capturing cellular morphology, tissue architecture, and microenvironmental organization. The central modeling question is therefore no longer whether histology contains molecular signal in principle, but whether current datasets and benchmarks can measure that signal under realistic biological variation.
 
@@ -129,12 +140,7 @@ We introduce \dataset as a context-aware, cell-aligned resource designed to boos
 
 We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through support-aware context profiles, condition-shift experiments, and a foundation-model context audit showing that similar average performance can conceal large worst-context failures. An ovarian age-associated case study is retained with its sample-confounding caveat in the appendix. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are also reported there.
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.98\linewidth]{dataset.png}
-    \caption{Overview of \dataset. The figure summarizes the scale of the resource, the multimodal structure of each record, and the single-cell alignment between histology context and molecular measurements.}
-    \label{fig:dataset_overview_ed}
-\end{figure*}
+
 
 More broadly, \dataset makes three contributions. First, it provides a large cell-aligned ST resource with matched H\&E and expression across diverse organs, studies, species, and assays. Second, it defines a data-centric framework for lifting spot-level image-to-gene prediction into the single-cell regime by replacing spot crops and spot-averaged targets with cell-centered histology and cell-level molecular targets. Third, it shows empirically that benchmark performance depends not only on model architecture, but also on the scale, resolution, and biological context made available by the dataset.
 
