@@ -1854,10 +1854,9 @@ The qualitative lesson from the completed runs is that transfer difficulty is no
 
 \subsection{Additional downstream analyses and use cases}
 Beyond the core image-to-gene benchmark, \dataset supports analyses of coarse
-cell state, tissue routing, language-aligned records, and spatial
-neighborhoods. These studies are grouped here because they demonstrate
-possible uses of the released record structure; none is treated as a primary
-benchmark claim.
+cell state, tissue routing, and language-aligned records. These studies are
+grouped here because they demonstrate possible uses of the released record
+structure; none is treated as a primary benchmark claim.
 
 \subsubsection{Coarse cell-state recovery}
 Beyond direct gene retrieval, we also evaluated a coarse downstream celltype analysis on representative Visium HD lung sample A using the completed coarse-to-fine checkpoint. This analysis contains 111,772 cells, 10 unsupervised clusters, and a 50-gene target subset. Because this illustrative run uses a restricted 50-gene panel, only three marker-derived classes remain stable in the current appendix: \textit{Club}, \textit{AT2}, and \textit{Immune}. In other words, this is best read as a marker-derived coarse cell-state analysis rather than a full cell ontology benchmark.
@@ -1913,50 +1912,6 @@ Retained marker-derived classes & Club, AT2, Immune \\
 \bottomrule
 \end{tabular}
 \end{table*}
-
-\subsubsection{Template-guided perturbation-like niche mining}
-\label{sec:appendix_perturbation}
-The same cell-level coordinates and neighborhood records support exploratory
-analyses beyond supervised prediction. As one example, we search for
-\emph{perturbation-like} local niches whose organization resembles the
-direct-plus-neighbor response patterns observed in Spatial Perturb-Seq. These
-are candidate regions for hypothesis generation, not experimentally verified
-perturbation labels.
-
-We first extract isolated single-guide seed cells and matched controls from a
-Spatial Perturb-Seq sample. For each guide, five features summarize the local
-response: a direct-effect score, response strength in the \(0\)--\(8\),
-\(8\)--\(32\), and \(32\)--\(64\) neighbor shells, and a near-to-far decay
-statistic. Templates from the strongest neighbor-propagating guides are then
-matched to cells in a representative Visium HD lung section. A cell is retained
-only when template similarity, direct strength, near-shell support, and
-positive spatial decay all pass adaptive high-quantile thresholds.
-
-The procedure identifies 222 spatially coherent anchors
-(\Cref{fig:appendix_perturbation_like_niches}). Relative to matched controls,
-the anchors show higher template similarity (mean cosine \(0.969\) versus
-\(0.496\)), a larger fraction of active neighbors (\(0.153\) versus \(0.035\)),
-and shorter distance to the nearest anchor (median \(274\) versus \(879\)
-pixels; all \(p<10^{-12}\)). An independent pseudo-perturbation example shows
-the same neighborhood pattern: six of eight nearest neighbors share the
-hypoxia-like state, and the local mean hypoxia score is \(0.514\), compared
-with a global mean of \(0.177\). These results demonstrate a use of the
-released neighborhood structure but do not establish a causal perturbation
-effect.
-
-\begin{figure}[!t]
-\centering
-\includegraphics[width=\linewidth]{TURB1.png}
-\vspace{0.4em}
-\includegraphics[width=\linewidth]{TURB2.jpg}
-\caption{\textbf{Template-guided mining of perturbation-like spatial niches.}
-Top: the Spatial Perturb-Seq-guided procedure and response-template summary
-used to score HD cells. Bottom: perturbation-like and matched control anchors,
-together with representative local neighborhoods. Candidate anchors are more
-template-consistent, locally enriched, and spatially clustered than matched
-controls; they remain hypothesis-generating rather than causal labels.}
-\label{fig:appendix_perturbation_like_niches}
-\end{figure}
 
 \subsubsection{Multi-organ classification}
 
