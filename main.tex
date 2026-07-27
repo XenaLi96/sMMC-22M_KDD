@@ -167,13 +167,10 @@ Each cell is represented as a multimodal record rather than as an image crop alo
 \setlength{\abovecaptionskip}{4pt}
 \setlength{\belowcaptionskip}{3pt}
 
-\caption{\textbf{Combined release, benchmark-coverage, and provenance audit.}
-The upper block preserves the release interface; the lower block partitions
-the 99 unique samples into mutually exclusive provenance groups relative to
-HEST-1K v1.1.0 and the 2025-02-12 STimage-1K4M snapshot. Counts are aligned
-targets after QC.}
+\caption{\textbf{Release interface and benchmark coverage.}
+Counts are aligned targets after QC. The light-blue row marks the new in-house
+primary data included in the current working manifest.}
 \label{tab:main_release_manifest}
-\label{tab:main_provenance_audit}
 
 \begin{tabularx}{\textwidth}{
 >{\raggedright\arraybackslash}p{2.25cm}
@@ -191,7 +188,7 @@ targets after QC.}
 \textbf{Platform} &
 \textbf{Cell / target unit} &
 \textbf{Targets} &
-\textbf{Coverage or provenance note} \\
+\textbf{Coverage or release note} \\
 \midrule
 \rowcolor{gray!12}
 \multicolumn{7}{l}{\textit{Release interface and benchmark coverage}} \\
@@ -216,13 +213,14 @@ Visium HD &
 Derived bin-to-cell target &
 11.95M &
 In-domain, cross-sample, and cross-platform evaluation \\
-DBiC-seq source block &
+\rowcolor{inhouseblue}
+New in-house primary data &
 21 &
-mouse / human cell-line origins &
+mouse-embryo; cervical; lung &
 DBiC-seq &
 Native cell &
-53,989 &
-In-domain and context-aware evaluation \\
+53{,}989 &
+In-domain/context-aware; 54{,}304 measured and 315 removed by QC \\
 Reviewer subset &
 sub. &
 review records &
@@ -237,46 +235,6 @@ Mixed &
 Split-indexed &
 fixed &
 In-domain for all categories; transfer protocols where supported \\
-\midrule
-\rowcolor{gray!12}
-\multicolumn{7}{l}{\textit{Mutually exclusive provenance audit}} \\
-\rowcolor{inhouseblue}
-New in-house primary data &
-21 &
-mouse-embryo; cervical; lung &
-DBiC-seq &
-Native cell &
-53{,}989 &
-Genuinely new primary data; 54{,}304 measured and 315 removed by QC \\
-Public, overlapping HEST-1K &
-32 unique slides (33 records) &
-22 species--organ strata &
-Xenium; Visium HD &
-Native / derived &
-11{,}051{,}149 &
-Public aggregation overlapping HEST-1K \\
-Public, overlapping STimage-1K4M only &
-2 &
-2 species--organ strata &
-Visium HD &
-Derived bin-to-cell &
-213{,}405 &
-Public aggregation unique to the STimage comparison \\
-Other public data &
-44 &
-16 species--organ strata &
-Xenium; Visium HD &
-Native / derived &
-16{,}996{,}704 &
-Other public aggregation \\
-\midrule
-\textbf{Total} &
-\textbf{99 unique samples (100 records)} &
-\textbf{25 tissue categories + 3 cell-line origins} &
-\textbf{Xenium; Visium HD; DBiC-seq} &
-\textbf{Native / derived} &
-\textbf{28{,}315{,}247} &
-\textbf{0.1907\% new primary targets} \\
 \bottomrule
 \end{tabularx}
 
@@ -287,19 +245,19 @@ samples versus 100 records. Anonymous release:
 \url{https://anonymous.4open.science/r/sMMC-22M-DB75}.}
 \end{table*}
 
-Gene targets are omitted from the combined manifest table for readability:
+Gene targets are omitted from the release table for readability:
 Xenium uses panel genes, Visium HD uses processed full-transcriptome targets,
 and cross-platform experiments use harmonized shared genes. Full per-sample
 gene counts, source identifiers, QC status, benchmark-coverage fields, and
 checksum-backed file paths are reported in the appendix manifest and released
 CSV.
 
-The combined audit in \Cref{tab:main_release_manifest} preserves the
-benchmark-package overview and makes the new-versus-aggregated scale claim
-directly auditable. The complete per-sample manifest remains in the appendix
-and release package, where each source sample is linked to its platform, organ,
-cell count, gene target, upstream source, license note, inclusion status, and
-QC outcome.
+\Cref{tab:main_release_manifest} preserves the benchmark-package overview and
+highlights the new in-house contribution. The mutually exclusive provenance
+partition is reported in Appendix~\Cref{tab:appendix_provenance_audit}. The
+complete per-sample manifest remains in the release package, where each source
+sample is linked to its platform, organ, cell count, gene target, upstream
+source, license note, inclusion status, and QC outcome.
 
 
 
@@ -710,11 +668,80 @@ regimes are actually supported. The expanded working manifest contains
 This total includes public native-Xenium cells, derived Visium HD bin-to-cell
 targets, and 53,989 native cells from 21 in-house DBiC-seq samples after QC.
 The detailed public-source table and distribution figure below describe the
-frozen 22M release snapshot; the updated provenance totals are reported in
-Table~\ref{tab:main_release_manifest}. In the current appendix we focus on
-representative benchmark subsets analyzed under the same three standardized
-regimes used throughout the paper: in-domain, cross-patient, and
-cross-platform.
+frozen 22M release snapshot. The updated release summary is reported in
+Table~\ref{tab:main_release_manifest}, and the mutually exclusive provenance
+partition is reported in Table~\ref{tab:appendix_provenance_audit}. In the
+current appendix we focus on representative benchmark subsets analyzed under
+the same three standardized regimes used throughout the paper: in-domain,
+cross-patient, and cross-platform.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.4pt}
+\renewcommand{\arraystretch}{1.04}
+\caption{\textbf{Mutually exclusive provenance audit.}
+The 99 unique samples are partitioned relative to HEST-1K v1.1.0 and the
+2025-02-12 STimage-1K4M snapshot. Counts are aligned targets after QC.}
+\label{tab:appendix_provenance_audit}
+\begin{tabularx}{\textwidth}{
+>{\raggedright\arraybackslash}p{2.25cm}
+>{\raggedright\arraybackslash}p{1.35cm}
+>{\raggedright\arraybackslash}p{2.15cm}
+>{\raggedright\arraybackslash}p{1.65cm}
+>{\raggedright\arraybackslash}p{1.75cm}
+>{\raggedleft\arraybackslash}p{1.45cm}
+>{\raggedright\arraybackslash}X
+}
+\toprule
+\textbf{Category} &
+\textbf{Samples} &
+\textbf{Scope} &
+\textbf{Platform} &
+\textbf{Target unit} &
+\textbf{Targets} &
+\textbf{Provenance note} \\
+\midrule
+\rowcolor{inhouseblue}
+New in-house primary data &
+21 &
+mouse-embryo; cervical; lung &
+DBiC-seq &
+Native cell &
+53{,}989 &
+54{,}304 measured and 315 removed by QC \\
+Public, overlapping HEST-1K &
+32 unique slides (33 records) &
+22 species--organ strata &
+Xenium; Visium HD &
+Native / derived &
+11{,}051{,}149 &
+Public aggregation overlapping HEST-1K \\
+Public, overlapping STimage-1K4M only &
+2 &
+2 species--organ strata &
+Visium HD &
+Derived bin-to-cell &
+213{,}405 &
+Public aggregation unique to the STimage comparison \\
+Other public data &
+44 &
+16 species--organ strata &
+Xenium; Visium HD &
+Native / derived &
+16{,}996{,}704 &
+Other public aggregation \\
+\midrule
+\textbf{Total} &
+\textbf{99 unique samples (100 records)} &
+\textbf{25 tissue categories + 3 cell-line origins} &
+\textbf{Xenium; Visium HD; DBiC-seq} &
+\textbf{Native / derived} &
+\textbf{28{,}315{,}247} &
+\textbf{0.1907\% new primary targets} \\
+\bottomrule
+\end{tabularx}
+\end{table*}
 
 \begin{figure*}[t]
 \centering
