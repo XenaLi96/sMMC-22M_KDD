@@ -70,7 +70,7 @@
 
 \begin{document}
 \begin{abstract}
-Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource whose current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories, 99 unique samples (100 versioned records), and multiple spatial-transcriptomic assays. The release now includes 21 in-house DBiC-seq samples with 53{,}989 paired cells after quality control. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, allowing analyses such as age-band shift in ovarian samples, where age-mismatched transfer sharply reduces prediction quality despite misleading global-distance summaries. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
+Spatial transcriptomics has created a compelling opportunity to test whether tissue morphology can predict molecular state, but existing benchmarks are constrained by limited scale, spot-level supervision, and incomplete biological context. We present \textbf{\dataset}, a cell-aligned multimodal resource whose current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories, 99 unique samples (100 versioned records), and multiple spatial-transcriptomic assays. The release now includes 21 in-house DBiC-seq samples with 53{,}989 paired cells after quality control. We organize the benchmark around three data-centric axes that determine whether histology-to-molecular modeling can move beyond local interpolation. First, \dataset provides scale: broad organ and study coverage enables controlled encoder benchmarking and reveals a scaling trend in which larger pathology foundation models improve morphology--gene correspondence under matched evaluation. Second, \dataset provides resolution: by decomposing assays into aligned cell-level records, our framework converts spot-level histology--omics pipelines into single-cell predictors and evaluates them under strict in-domain and cross-patient splits. Third, \dataset provides rich context: each cell is paired with spatial, molecular, and sample-level metadata, enabling support-aware audits and adaptation under age, disease, study, sample, and platform shifts rather than relying only on pooled performance. Together, \dataset and \methodname establish a practical framework for single-cell histology-to-gene prediction while showing that robust generalization still depends on scale, cellular resolution, and explicit biological context.
 \end{abstract}
 \maketitle
 \section{Introduction}
@@ -80,7 +80,7 @@ Existing histology--omics resources have substantially advanced the field, espec
 
 We introduce \dataset as a context-aware, cell-aligned resource designed to boost ST research along exactly these three axes: \textbf{scale}, \textbf{resolution}, and \textbf{rich context}. At scale, the current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories and 99 unique samples (100 records), providing enough breadth to evaluate whether larger pathology encoders produce stronger morphology--gene correspondence rather than merely stronger visual features. The name \dataset is retained from the frozen release, while the versioned manifest records subsequent public and in-house additions. At resolution, each benchmark unit is an aligned cell rather than a mixed spot, which lets us convert spot-level histology--omics pipelines into single-cell predictors. At the context level, each cell is embedded in a structured record that includes histology, molecular state, spatial coordinates, neighborhood information, and sample-level attributes, making it possible to study shifts such as age-band mismatch rather than treating them as unexplained noise.
 
-We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through a new ovarian age-effect analysis showing that sample-level biological context can dominate apparent generalization: an age-mismatched target can cause large drops in F1, gene-wise correlation, cell-wise correlation, and predicted nonzero rate, while global distribution distances alone remain misleading. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are reported in the appendix.
+We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through support-aware context profiles, condition-shift experiments, and a companion foundation-model audit showing that similar average performance can conceal large worst-context failures. An ovarian age-associated case study is retained with its sample-confounding caveat in the appendix. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are also reported there.
 
 \begin{figure*}[t]
     \centering
@@ -385,8 +385,8 @@ coordinates and 0.053 for spatial KNN.
 
 \begin{table}[t]
 \centering
-\footnotesize
-\setlength{\tabcolsep}{1.0pt}
+\scriptsize
+\setlength{\tabcolsep}{0.8pt}
 \renewcommand{\arraystretch}{0.98}
 \caption{\textbf{Cell-aligned breadth benchmark across all 25 release
 categories.}
@@ -396,7 +396,7 @@ best of the image, coordinate-only, and spatial-KNN baselines.}
 \label{tab:breadth_25}
 \label{tab:breadth_25a}
 \label{tab:breadth_25b}
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrr@{\hspace{4pt}}r@{}}
 \toprule
 & \multicolumn{3}{c}{\scriptsize Gene Pearson}
 & \multicolumn{3}{c}{\scriptsize Image prediction} \\
@@ -410,38 +410,38 @@ Category &
 {\scriptsize F1} \\
 \midrule
 \rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Mouse organs}} \\
-Bone & .030 & \textbf{.124} & .055 & .037 & .180 & .240 \\
-Colon & \textbf{.615} & -.137 & .072 & .588 & .739 & .744 \\
-Embryo & \textbf{.278} & .037 & .045 & .251 & .517 & .342 \\
-Small intestine & \textbf{.572} & -.104 & .067 & .548 & .701 & .715 \\
+Bone & 0.030 & \textbf{0.124} & 0.055 & 0.037 & 0.180 & 0.240 \\
+Colon & \textbf{0.615} & -0.137 & 0.072 & 0.588 & 0.739 & 0.744 \\
+Embryo & \textbf{0.278} & 0.037 & 0.045 & 0.251 & 0.517 & 0.342 \\
+Small intestine & \textbf{0.572} & -0.104 & 0.067 & 0.548 & 0.701 & 0.715 \\
 \addlinespace[2pt]
 \rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Human organs}} \\
-Breast & \textbf{.400} & .053 & .035 & .375 & .433 & .487 \\
-Cervical & \textbf{.178} & .017 & .014 & .157 & .247 & .026 \\
-Colorectal & \textbf{.431} & .056 & .083 & .419 & .532 & .623 \\
-Heart & \textbf{.292} & .010 & .021 & .266 & .688 & .304 \\
-Kidney & \textbf{.402} & .019 & .017 & .361 & .471 & .460 \\
-Liver & -.002 & .003 & \textbf{.010} & -.002 & .561 & .400 \\
-Lung & \textbf{.359} & .065 & .053 & .317 & .402 & .457 \\
-Lymph node & \textbf{.141} & .043 & .013 & .131 & .164 & .023 \\
-Ovarian & \textbf{.250} & .122 & .104 & .239 & .312 & .234 \\
-Ovarian glands & \textbf{.402} & .059 & .043 & .391 & .559 & .756 \\
-Pancreas & \textbf{.324} & .090 & .068 & .272 & .505 & .275 \\
-Pancreatic & \textbf{.366} & .080 & .051 & .341 & .540 & .694 \\
-\shortstack[l]{Pancreatic duct\\gland} & \textbf{.331} & .091 & .100 & .282 & .408 & .386 \\
-Prostate & \textbf{.263} & -.015 & .025 & .244 & .263 & .083 \\
-Skin & \textbf{.359} & .048 & .086 & .299 & .437 & .368 \\
-Tonsil & \textbf{.294} & .028 & .018 & .249 & .462 & .399 \\
+Breast & \textbf{0.400} & 0.053 & 0.035 & 0.375 & 0.433 & 0.487 \\
+Cervical & \textbf{0.178} & 0.017 & 0.014 & 0.157 & 0.247 & 0.026 \\
+Colorectal & \textbf{0.431} & 0.056 & 0.083 & 0.419 & 0.532 & 0.623 \\
+Heart & \textbf{0.292} & 0.010 & 0.021 & 0.266 & 0.688 & 0.304 \\
+Kidney & \textbf{0.402} & 0.019 & 0.017 & 0.361 & 0.471 & 0.460 \\
+Liver & -0.002 & 0.003 & \textbf{0.010} & -0.002 & 0.561 & 0.400 \\
+Lung & \textbf{0.359} & 0.065 & 0.053 & 0.317 & 0.402 & 0.457 \\
+Lymph node & \textbf{0.141} & 0.043 & 0.013 & 0.131 & 0.164 & 0.023 \\
+Ovarian & \textbf{0.250} & 0.122 & 0.104 & 0.239 & 0.312 & 0.234 \\
+Ovarian glands & \textbf{0.402} & 0.059 & 0.043 & 0.391 & 0.559 & 0.756 \\
+Pancreas & \textbf{0.324} & 0.090 & 0.068 & 0.272 & 0.505 & 0.275 \\
+Pancreatic & \textbf{0.366} & 0.080 & 0.051 & 0.341 & 0.540 & 0.694 \\
+\shortstack[l]{Pancreatic duct\\gland} & \textbf{0.331} & 0.091 & 0.100 & 0.282 & 0.408 & 0.386 \\
+Prostate & \textbf{0.263} & -0.015 & 0.025 & 0.244 & 0.263 & 0.083 \\
+Skin & \textbf{0.359} & 0.048 & 0.086 & 0.299 & 0.437 & 0.368 \\
+Tonsil & \textbf{0.294} & 0.028 & 0.018 & 0.249 & 0.462 & 0.399 \\
 \addlinespace[2pt]
 \rowcolor{gray!18}\multicolumn{7}{@{}l}{\textbf{Mixed and other species}} \\
-\shortstack[l]{Brain(Human+Mouse)} & \textbf{.399} & .010 & .036 & .371 & .570 & .752 \\
-Head (zebrafish) & \textbf{.216} & .022 & .031 & .193 & .429 & .287 \\
-Plant (\textit{A. thaliana}) & -.011 & .004 & \textbf{.012} & -.009 & .385 & .052 \\
-Seed (soybean) & -.020 & -.003 & \textbf{.008} & -.018 & .314 & .037 \\
-\shortstack[l]{Xenograft} & \textbf{.387} & .041 & .049 & .362 & .526 & .589 \\
+\shortstack[l]{Brain(Human+Mouse)} & \textbf{0.399} & 0.010 & 0.036 & 0.371 & 0.570 & 0.752 \\
+Head (zebrafish) & \textbf{0.216} & 0.022 & 0.031 & 0.193 & 0.429 & 0.287 \\
+Plant (\textit{A. thaliana}) & -0.011 & 0.004 & \textbf{0.012} & -0.009 & 0.385 & 0.052 \\
+Seed (soybean) & -0.020 & -0.003 & \textbf{0.008} & -0.018 & 0.314 & 0.037 \\
+\shortstack[l]{Xenograft} & \textbf{0.387} & 0.041 & 0.049 & 0.362 & 0.526 & 0.589 \\
 \midrule
-\textbf{30-sample macro} & \textbf{.324} & .046 & .053 &
-\textbf{.291} & \textbf{.442} & \textbf{.413} \\
+\textbf{30-sample macro} & \textbf{0.324} & 0.046 & 0.053 &
+\textbf{0.291} & \textbf{0.442} & \textbf{0.413} \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -525,30 +525,38 @@ coarse aggregation can hide heterogeneity in a density-dependent way, not that
 cell-level prediction is always numerically easier. Full results are in
 Appendix~\ref{sec:reviewer_validation}.
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.98\linewidth]{age.png}
-\caption{\textbf{Ovarian age-band shift analysis.} Left: accuracy and rank-correlation metrics drop sharply under age-shifted transfer. Middle: the model predicts far fewer active genes on the age-shifted target, creating a sparsity failure. Right: global distribution distances do not reliably diagnose this failure, showing why sample-level context such as age is necessary for interpreting model generalization.}
-\label{fig:ovarian_age_effect}
-\end{figure*}
+\subsection{Rich Context: From Context Shifts to Foundation-Model Bias Audits}
+The third boost is structured biological and technical context. Compared with
+image--expression-centered resources such as HEST-1K and STimage-1K4M,
+\dataset makes context part of the benchmark interface: aligned cells retain
+organ, study, sample, platform, disease and age fields when available, together
+with spatial neighborhoods and local/context histology. These fields do not
+make every comparison identifiable, but they allow a benchmark to ask
+\emph{where} a model fails rather than reporting only a pooled average.
 
-\subsection{Rich Context: Age-Band Shift Reveals a Hidden Failure Mode}
-The third boost is rich biological context. A cell-aligned image--expression pair is not enough to explain why a model succeeds or fails: sample-level attributes such as age, disease state, and tissue condition can change the distribution of cell states and local neighborhoods. \dataset stores these attributes with spatial and molecular records so that the benchmark can stratify failure modes rather than collapsing them into a single pooled score.
+\noindent\textbf{Support-aware context reliability.}
+For each eligible context axis, we propose reporting
+\(\mathrm{Average}\), \(\mathrm{Worst}\), and
+\(\mathrm{Gap}=\max_c S_c-\min_c S_c\), where \(S_c\) is the task score in
+context bin \(c\), together with independent
+sample/donor support and a held-out context probe. A large probe score shows
+that context is recoverable from a representation; it does not by itself prove
+harmful bias. The primary failure criterion is instead a supported collapse in
+worst-context task performance. The versioned manifest and support matrix make
+unsupported label--context edges explicit rather than silently combining them
+with valid comparisons.
 
-\Cref{fig:ovarian_age_effect} shows this point in an ovarian age-shift analysis. When the evaluation is framed as an age effect, the matched older-band transfer AK(60+)$\!\to\!$AD(60+) reaches F1 0.289, gene Spearman 0.036, and cell Spearman 0.206. The age-shifted AK(60+)$\!\to\!$AL(40-) setting drops to F1 0.072, gene Spearman 0.006, and cell Spearman 0.095. Under the same framing, F1 falls by 75.0\%, gene Spearman by 83.5\%, and cell Spearman by 53.7\%. The prediction nonzero rate also collapses from 0.166 to 0.027, with the model becoming much sparser on the age-shifted target. This supports the core context claim: models trained or evaluated within one age band can fail sharply on another, even when the organ and broad disease family appear similar.
-
-The same figure also explains why global distribution distances are insufficient. The age-shifted target has lower matrix distance and energy distance than the matched older-band target in this summary, even though its prediction quality is substantially worse. MMD is also too coarse to diagnose the sparsity collapse by itself. Rich context therefore acts as an explanatory modality: without age and sample-level metadata, this failure would look like an unexplained model weakness; with context, it becomes a measurable biological distribution shift.
-
-\noindent\textbf{Independent condition-shift support.}
-Because age is nested within the ovarian samples and the panels differ, the
-ovarian result should be interpreted as an age-associated,
-sample-confounded case study rather than a causal age effect. We therefore add
-a separate native-Xenium skin experiment using the same spatially buffered
-protocol. Replication between two non-diseased skin sections reaches Gene
-Pearson 0.359, whereas normal/melanoma transfers reach only 0.063--0.094
-(\Cref{tab:main_skin_context}). This second experiment preserves the original
-context argument while showing that the observed collapse is not specific to
-the ovarian example.
+\noindent\textbf{Direct spatial context shifts.}
+On native-Xenium skin, replication between two non-diseased sections reaches
+Gene Pearson 0.359, whereas normal--melanoma transfers reach only
+0.063--0.094 (\Cref{tab:main_skin_context}). The ovarian experiment shows the
+same practical failure: an older-band matched transfer reaches F1 0.289, gene
+Spearman 0.036, and cell Spearman 0.206, whereas transfer to the younger-band
+sample falls to 0.072, 0.006, and 0.095. Its nonzero prediction rate also drops
+from 0.166 to 0.027. Because age is nested within samples and the panels
+differ, we treat this as an age-associated, sample-confounded case study rather
+than a causal age effect; the full panel and sample-alias definitions are moved
+to Appendix~\Cref{fig:ovarian_age_effect}.
 
 \begin{table}[t]
 \centering
@@ -561,14 +569,77 @@ spatial holdouts.}
 \toprule
 Contrast & Gene P. & Gene S. & Cell P. & F1 \\
 \midrule
-Normal 1 \(\rightarrow\) Normal 2 & .359 & .300 & .428 & .345 \\
-Melanoma \(\rightarrow\) Normal 1 & .077 & .074 & .264 & .063 \\
-Melanoma \(\rightarrow\) Normal 2 & .065 & .062 & .238 & .051 \\
-Normal \(\rightarrow\) Melanoma add-on & .094 & .078 & .114 & .037 \\
-Normal \(\rightarrow\) Melanoma prime & .063 & .056 & .074 & .017 \\
+Normal 1 \(\rightarrow\) Normal 2 & 0.359 & 0.300 & 0.428 & 0.345 \\
+Melanoma \(\rightarrow\) Normal 1 & 0.077 & 0.074 & 0.264 & 0.063 \\
+Melanoma \(\rightarrow\) Normal 2 & 0.065 & 0.062 & 0.238 & 0.051 \\
+Normal \(\rightarrow\) Melanoma add-on & 0.094 & 0.078 & 0.114 & 0.037 \\
+Normal \(\rightarrow\) Melanoma prime & 0.063 & 0.056 & 0.074 & 0.017 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\noindent\textbf{Companion foundation-model audit.}
+To test whether this pattern extends beyond one spatial task, we applied the
+same support-aware reporting principle in a companion audit of external
+CELLxGENE and TCGA representations. The audit covers Geneformer,
+scGPT, and scVI-style single-cell embeddings
+~\cite{theodoris2023geneformer,cui2024scgpt,lopez2018scvi,cellxgene2025}, as
+well as UNI, CONCH, and H-Optimus-0 pathology embeddings. Representative rows
+in \Cref{tab:context_bias_external} show that high average balanced accuracy
+can coexist with severe assay-, dataset-, or site-specific collapse.
+
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.02}
+\caption{\textbf{Representative context-bin failures in a companion external
+foundation-model audit.} Values are balanced accuracy; higher Average/Worst
+and lower Gap are better. These CELLxGENE/TCGA rows validate the audit
+protocol and are not \dataset benchmark scores.}
+\label{tab:context_bias_external}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrr@{}}
+\toprule
+Task & Context / model & Average & Worst & Gap \\
+\midrule
+Bone-marrow cell type &
+Assay; Geneformer / scGPT / scVI-style &
+0.932--0.962 & 0.616--0.740 & 0.258--0.373 \\
+Ten-tissue cell type &
+Dataset; scGPT &
+0.667--0.962 & 0.004--0.892 & max 0.975 \\
+LUAD KRAS &
+Site; CONCH / H-Optimus-0 &
+0.499 / 0.567 & 0.375 / 0.305 & 0.542 / 0.528 \\
+LGG IDH &
+Site; UNI / H-Optimus-0 &
+0.682 / 0.747 & 0.464 / 0.476 & 0.471 / 0.524 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
+Across all 50 support-eligible foundation-model rows in that campaign, 43
+(86.0\%) met the prespecified fixed-bin clustered-bootstrap and
+Benjamini--Hochberg screening criterion, with a median context gap of 0.404.
+This count concerns evaluation rows, not the fraction of foundation models
+that are intrinsically ``biased.'' It nevertheless shows why a resource needs
+explicit context fields before average performance can be interpreted.
+
+\noindent\textbf{Context-aware fine-tuning and adaptation.}
+Rich context also turns bias detection into an actionable benchmark. Under
+held-out-context evaluation in the companion campaign, label--context
+reweighting raised worst-bin balanced accuracy from 0.548 to 0.648 for
+Geneformer under assay shift and from 0.548 to 0.581 for scGPT under dataset
+shift; a support-gated adapter raised the Geneformer dataset-shift result from
+0.547 to 0.634. The ranking changed across tasks, so no intervention was
+uniformly best. \dataset provides the paired image, expression, context, and
+fixed-split structure needed to extend this protocol to spatial foundation
+models: users can compare unmitigated training with context-balanced sampling,
+reweighting, lightweight adapters, or end-to-end fine-tuning while reporting
+Average, Worst, Gap, and support on the same cells. Thus rich context is not
+only descriptive metadata; it is an interface for evaluating and improving
+foundation-model reliability under biologically and technically meaningful
+shifts.
 
 \section{Release, Reproducibility, and Responsible Use}
 \label{sec:release_reproducibility}
@@ -578,12 +649,12 @@ We release \dataset Bench as a reviewer-accessible artifact package rather than 
 The release separates the full processed resource from the lightweight review subset, but both artifacts are governed by the same manifest and schema. This lets reviewers verify the benchmark interface on a downloadable subset while still auditing the full scale and source composition through the manifest. The repository also includes license notes, responsible-use terms, and split definitions so that future models can be evaluated without redefining preprocessing or held-out partitions.
 
 \section{Discussion and Limitations}
-The value of \dataset lies in enabling stronger evaluation, not in implying that histology-to-molecular prediction is solved. Scale improves morphology--gene correspondence, but the scaling-law results do not remove the need for leakage-controlled biological transfer tests. Cell-level resolution makes the task more biologically meaningful, but it also exposes errors that spot-level averaging can hide. Rich context explains failures such as age-band mismatch, but context metadata remain incomplete and uneven across public studies. Some organs support only a subset of evaluation regimes, and complete matched comparisons across all baseline families remain limited by the availability of aligned preprocessing and split definitions.
+The value of \dataset lies in enabling stronger evaluation, not in implying that histology-to-molecular prediction is solved. Scale improves morphology--gene correspondence, but the scaling-law results do not remove the need for leakage-controlled biological transfer tests. Cell-level resolution makes the task more biologically meaningful, but it also exposes errors that spot-level averaging can hide. Rich context enables worst-context auditing and context-aware adaptation, but metadata and independent donor support remain incomplete and uneven across public studies. Some organs support only a subset of evaluation regimes, and complete matched comparisons across all baseline families remain limited by the availability of aligned preprocessing and split definitions.
 
-This framing also changes how benchmark results should be read. A high in-domain score is evidence of local interpolation, not a general solution. A strong cross-patient score is more informative, but still does not guarantee robustness to shifts in age, platform, disease composition, or tissue processing. The ovarian age-effect result is therefore not an isolated side analysis; it illustrates why future ST benchmarks need explicit context fields rather than only larger image--expression tables.
+This framing also changes how benchmark results should be read. A high in-domain score is evidence of local interpolation, not a general solution. A strong cross-sample score is more informative, but still does not guarantee robustness to shifts in age, platform, disease composition, or tissue processing. The skin transfer, companion foundation-model audit, and ovarian sample-confounded case collectively illustrate why future ST benchmarks need explicit context fields and support matrices rather than only larger image--expression tables. Context-aware fine-tuning is a benchmarkable response to these failures, not a guarantee that every unsupported shift can be corrected.
 
 \section{Conclusion}
-We presented \dataset as a cell-aligned, context-aware resource that boosts ST research along three axes: scale, resolution, and rich biological context. Scale enables controlled encoder benchmarking and reveals foundation-model scaling behavior for morphology--gene correspondence. Resolution enables a practical framework for converting spot-level histology--omics methods into single-cell predictors, evaluated under strict in-domain and cross-patient splits. Rich context exposes biologically meaningful failures, including age-band transfer collapse in ovarian samples, that global distances alone can miss. Together, these results position \dataset and \methodname as a more realistic basis for single-cell histology-to-molecular modeling while keeping unresolved generalization challenges visible.
+We presented \dataset as a cell-aligned, context-aware resource that boosts ST research along three axes: scale, resolution, and rich biological context. Scale enables controlled encoder benchmarking and reveals foundation-model scaling behavior for morphology--gene correspondence. Resolution enables a practical framework for converting spot-level histology--omics methods into single-cell predictors, evaluated under strict in-domain and cross-sample splits. Rich context exposes failures hidden by pooled performance and provides the support-aware interface needed to benchmark context-balanced training, lightweight adaptation, and fine-tuning. Together, these results position \dataset and \methodname as a more realistic basis for single-cell histology-to-molecular modeling while keeping unresolved generalization challenges visible.
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{egbib}
@@ -1058,6 +1129,26 @@ coordinate-span train--test buffer. Target genes are selected from the training
 partition only. Samples, rather than cells, are used for macro averaging,
 bootstrap confidence intervals, and paired tests.
 
+\noindent\textbf{Ovarian age-associated shift case study.}
+The original sample aliases in \Cref{fig:ovarian_age_effect} denote a 60+
+training sample (AK), a 60+ target sample (AD), and a younger-than-40 target
+sample (AL). Age is nested within sample and the molecular panels differ, so
+this comparison is reported as a sample-confounded stress test rather than a
+causal age-effect estimate.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\linewidth]{age.png}
+\caption{\textbf{Ovarian age-associated, sample-confounded transfer.}
+Left: accuracy and rank-correlation metrics drop under transfer from the 60+
+training sample to the younger-than-40 target. Middle: the model predicts far
+fewer active genes on that target, creating a sparsity failure. Right: global
+distribution distances do not reliably diagnose the performance collapse.
+AK, AD, and AL denote the 60+ training, 60+ target, and younger-than-40 target
+samples, respectively.}
+\label{fig:ovarian_age_effect}
+\end{figure*}
+
 \noindent\textbf{Training-size sensitivity.}
 On a non-diseased human-heart Xenium sample, all seven frozen encoders improve
 monotonically as the training fraction increases
@@ -1400,6 +1491,7 @@ Beyond direct gene retrieval, we also evaluated a coarse downstream celltype ana
 \caption{Downstream celltype appendix panel for representative sample A. The panel summarizes whole-slide organization, local patch comparisons, and marker-derived celltype structure under the aligned cluster palette used throughout the downstream analysis.}
 \label{fig:celltype_panel}
 \end{figure*}
+\FloatBarrier
 
 \begin{table}[t]
 \centering
