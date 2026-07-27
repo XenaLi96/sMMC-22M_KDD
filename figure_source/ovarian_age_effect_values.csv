@@ -1,0 +1,9 @@
+panel,metric,matched_older_band,age_shifted_band,direction
+Predictive performance,F1,0.289,0.072,higher
+Predictive performance,Gene Spearman,0.036,0.006,higher
+Predictive performance,Cell Spearman,0.206,0.095,higher
+Prediction sparsity,Prediction rate,0.166,0.027,descriptive
+Prediction sparsity,Rate difference,0.091,0.023,lower
+Distribution distance,Matrix distance,1.079,0.669,lower
+Distribution distance,Energy distance,0.091,0.026,lower
+Distribution distance,MMD,0.162,0.097,lower
