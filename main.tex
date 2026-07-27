@@ -158,36 +158,46 @@ Large pathology encoders define this benchmark's representation-learning context
 \begin{table}[t]
 \centering
 \footnotesize
-\setlength{\tabcolsep}{1.5pt}
-\renewcommand{\arraystretch}{1.08}
-\caption{\textbf{Compact resource comparison.} C: cell-level; M: multi-organ;
-S: study split; P: platform transfer; T: text. \checkmark, --, and
-\(\sim\) denote yes, no, and partial support. Row groups indicate the primary
-resource intent.}
+\setlength{\tabcolsep}{2.2pt}
+\renewcommand{\arraystretch}{1.10}
+\caption{\textbf{Resource comparison.} Coverage is reported directly as
+Yes, No, or Partial. Row groups indicate each resource's primary intent.}
 \label{tab:resource_comparison_ed}
-\begin{tabular}{@{}lccccc@{}}
+\begin{tabularx}{\columnwidth}{@{}
+>{\raggedright\arraybackslash}X
+>{\centering\arraybackslash}m{0.72cm}
+>{\centering\arraybackslash}m{0.84cm}
+>{\centering\arraybackslash}m{0.84cm}
+>{\centering\arraybackslash}m{1.25cm}
+>{\centering\arraybackslash}m{1.05cm}
+@{}}
 \toprule
-Resource & C & M & S & P & T \\
+\textbf{Resource} &
+\shortstack{\textbf{Cell}\\\textbf{level}} &
+\shortstack{\textbf{Multi}\\\textbf{organ}} &
+\shortstack{\textbf{Study}\\\textbf{split}} &
+\shortstack{\textbf{Platform}\\\textbf{transfer}} &
+\shortstack{\textbf{Text /}\\\textbf{context}} \\
 \midrule
 \rowcolor[gray]{0.94}
 \multicolumn{6}{l}{\textit{Single-cell-only atlas}} \\
-CELLxGENE Census & \checkmark & \checkmark & \checkmark & -- & -- \\
+CELLxGENE Census & Yes & Yes & Yes & No & No \\
 \addlinespace[2pt]
 \rowcolor[gray]{0.94}
 \multicolumn{6}{l}{\textit{Pathology image--text corpora}} \\
-OpenPath & -- & \(\sim\) & -- & -- & \checkmark \\
-Quilt-1M & -- & \(\sim\) & -- & -- & \checkmark \\
-PathGen-1.6M & -- & \(\sim\) & -- & -- & \checkmark \\
+OpenPath & No & Partial & No & No & Yes \\
+Quilt-1M & No & Partial & No & No & Yes \\
+PathGen-1.6M & No & Partial & No & No & Yes \\
 \addlinespace[2pt]
 \rowcolor[gray]{0.94}
 \multicolumn{6}{l}{\textit{ST + histology resources}} \\
-HEST-1K & -- & \checkmark & \checkmark & \(\sim\) & -- \\
-STimage-1K4M & -- & \checkmark & \(\sim\) & \(\sim\) & -- \\
+HEST-1K & No & Yes & Yes & Partial & No \\
+STimage-1K4M & No & Yes & Partial & Partial & No \\
 \addlinespace[2pt]
 \rowcolor[rgb]{0.90,0.95,1.00}
-\textbf{\dataset} & \checkmark & \checkmark & \checkmark & \checkmark & \(\sim\) \\
+\textbf{\dataset} & Yes & Yes & Yes & Yes & Partial \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \section{The \dataset Resource}
