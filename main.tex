@@ -80,7 +80,7 @@ Existing histology--omics resources have substantially advanced the field, espec
 
 We introduce \dataset as a context-aware, cell-aligned resource designed to boost ST research along exactly these three axes: \textbf{scale}, \textbf{resolution}, and \textbf{rich context}. At scale, the current working manifest contains 28{,}315{,}247 aligned targets across 25 tissue categories and 99 unique samples (100 records), providing enough breadth to evaluate whether larger pathology encoders produce stronger morphology--gene correspondence rather than merely stronger visual features. The name \dataset is retained from the frozen release, while the versioned manifest records subsequent public and in-house additions. At resolution, each benchmark unit is an aligned cell rather than a mixed spot, which lets us convert spot-level histology--omics pipelines into single-cell predictors. At the context level, each cell is embedded in a structured record that includes histology, molecular state, spatial coordinates, neighborhood information, and sample-level attributes, making it possible to study shifts such as age-band mismatch rather than treating them as unexplained noise.
 
-We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through support-aware context profiles, condition-shift experiments, and a companion foundation-model audit showing that similar average performance can conceal large worst-context failures. An ovarian age-associated case study is retained with its sample-confounding caveat in the appendix. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are also reported there.
+We therefore organize the experimental section around three claims. \textbf{Scale} is evaluated through encoder benchmarking and scaling-law behavior. \textbf{Resolution} is evaluated through strict in-domain and cross-patient image-to-single-cell expression prediction, using the same train/validation/test cells and gene targets across methods. \textbf{Rich context} is evaluated through support-aware context profiles, condition-shift experiments, and a foundation-model context audit showing that similar average performance can conceal large worst-context failures. An ovarian age-associated case study is retained with its sample-confounding caveat in the appendix. Secondary experiments, quality audits, platform-transfer stress tests, downstream celltype analysis, caption diagnostics, perturbation-like niche mining, and release details are also reported there.
 
 \begin{figure*}[t]
     \centering
@@ -578,14 +578,14 @@ Normal \(\rightarrow\) Melanoma prime & 0.063 & 0.056 & 0.074 & 0.017 \\
 \end{tabular}
 \end{table}
 
-\noindent\textbf{Companion foundation-model audit.}
-To test whether this pattern extends beyond one spatial task, we applied the
-same support-aware reporting principle in a companion audit of external
-CELLxGENE and TCGA representations. The audit covers Geneformer,
+\noindent\textbf{Foundation-model context audit.}
+To test whether this pattern extends across biomedical foundation-model
+modalities, we applied the same support-aware reporting principle to CELLxGENE
+and TCGA representations. The audit covers Geneformer,
 scGPT, and scVI-style single-cell embeddings
 ~\cite{theodoris2023geneformer,cui2024scgpt,lopez2018scvi,cellxgene2025}, as
 well as UNI, CONCH, and H-Optimus-0 pathology embeddings. Representative rows
-in \Cref{tab:context_bias_external} show that high average balanced accuracy
+in \Cref{tab:context_bias_audit} show that high average balanced accuracy
 can coexist with severe assay-, dataset-, or site-specific collapse.
 
 \begin{table*}[t]
@@ -593,11 +593,10 @@ can coexist with severe assay-, dataset-, or site-specific collapse.
 \footnotesize
 \setlength{\tabcolsep}{3.0pt}
 \renewcommand{\arraystretch}{1.02}
-\caption{\textbf{Representative context-bin failures in a companion external
-foundation-model audit.} Values are balanced accuracy; higher Average/Worst
-and lower Gap are better. These CELLxGENE/TCGA rows validate the audit
-protocol and are not \dataset benchmark scores.}
-\label{tab:context_bias_external}
+\caption{\textbf{Representative context-bin failures across single-cell and
+pathology foundation models.} Values are balanced accuracy; higher
+Average/Worst and lower Gap are better.}
+\label{tab:context_bias_audit}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrr@{}}
 \toprule
 Task & Context / model & Average & Worst & Gap \\
@@ -618,7 +617,7 @@ Site; UNI / H-Optimus-0 &
 \end{tabular*}
 \end{table*}
 
-Across all 50 support-eligible foundation-model rows in that campaign, 43
+Across all 50 support-eligible foundation-model rows in the audit, 43
 (86.0\%) met the prespecified fixed-bin clustered-bootstrap and
 Benjamini--Hochberg screening criterion, with a median context gap of 0.404.
 This count concerns evaluation rows, not the fraction of foundation models
@@ -627,7 +626,7 @@ explicit context fields before average performance can be interpreted.
 
 \noindent\textbf{Context-aware fine-tuning and adaptation.}
 Rich context also turns bias detection into an actionable benchmark. Under
-held-out-context evaluation in the companion campaign, label--context
+held-out-context evaluation in the same audit, label--context
 reweighting raised worst-bin balanced accuracy from 0.548 to 0.648 for
 Geneformer under assay shift and from 0.548 to 0.581 for scGPT under dataset
 shift; a support-gated adapter raised the Geneformer dataset-shift result from
@@ -651,7 +650,7 @@ The release separates the full processed resource from the lightweight review su
 \section{Discussion and Limitations}
 The value of \dataset lies in enabling stronger evaluation, not in implying that histology-to-molecular prediction is solved. Scale improves morphology--gene correspondence, but the scaling-law results do not remove the need for leakage-controlled biological transfer tests. Cell-level resolution makes the task more biologically meaningful, but it also exposes errors that spot-level averaging can hide. Rich context enables worst-context auditing and context-aware adaptation, but metadata and independent donor support remain incomplete and uneven across public studies. Some organs support only a subset of evaluation regimes, and complete matched comparisons across all baseline families remain limited by the availability of aligned preprocessing and split definitions.
 
-This framing also changes how benchmark results should be read. A high in-domain score is evidence of local interpolation, not a general solution. A strong cross-sample score is more informative, but still does not guarantee robustness to shifts in age, platform, disease composition, or tissue processing. The skin transfer, companion foundation-model audit, and ovarian sample-confounded case collectively illustrate why future ST benchmarks need explicit context fields and support matrices rather than only larger image--expression tables. Context-aware fine-tuning is a benchmarkable response to these failures, not a guarantee that every unsupported shift can be corrected.
+This framing also changes how benchmark results should be read. A high in-domain score is evidence of local interpolation, not a general solution. A strong cross-sample score is more informative, but still does not guarantee robustness to shifts in age, platform, disease composition, or tissue processing. The skin transfer, foundation-model context audit, and ovarian sample-confounded case collectively illustrate why future ST benchmarks need explicit context fields and support matrices rather than only larger image--expression tables. Context-aware fine-tuning is a benchmarkable response to these failures, not a guarantee that every unsupported shift can be corrected.
 
 \section{Conclusion}
 We presented \dataset as a cell-aligned, context-aware resource that boosts ST research along three axes: scale, resolution, and rich biological context. Scale enables controlled encoder benchmarking and reveals foundation-model scaling behavior for morphology--gene correspondence. Resolution enables a practical framework for converting spot-level histology--omics methods into single-cell predictors, evaluated under strict in-domain and cross-sample splits. Rich context exposes failures hidden by pooled performance and provides the support-aware interface needed to benchmark context-balanced training, lightweight adaptation, and fine-tuning. Together, these results position \dataset and \methodname as a more realistic basis for single-cell histology-to-molecular modeling while keeping unresolved generalization challenges visible.
