@@ -555,17 +555,6 @@ with spatial neighborhoods and local/context histology. These fields do not
 make every comparison identifiable, but they allow a benchmark to ask
 \emph{where} a model fails rather than reporting only a pooled average.
 
-\noindent\textbf{Support-aware context reliability.}
-For each eligible context axis, we propose reporting
-\(\mathrm{Average}\), \(\mathrm{Worst}\), and
-\(\mathrm{Gap}=\max_c S_c-\min_c S_c\), where \(S_c\) is the task score in
-context bin \(c\), together with independent
-sample/donor support and a held-out context probe. A large probe score shows
-that context is recoverable from a representation; it does not by itself prove
-harmful bias. The primary failure criterion is instead a supported collapse in
-worst-context task performance. The versioned manifest and support matrix make
-unsupported label--context edges explicit rather than silently combining them
-with valid comparisons.
 
 \begin{table*}[t]
 \centering
@@ -595,6 +584,21 @@ Site; UNI / H-Optimus-0 &
 \bottomrule
 \end{tabular*}
 \end{table*}
+
+
+\noindent\textbf{Support-aware context reliability.}
+For each eligible context axis, we propose reporting
+\(\mathrm{Average}\), \(\mathrm{Worst}\), and
+\(\mathrm{Gap}=\max_c S_c-\min_c S_c\), where \(S_c\) is the task score in
+context bin \(c\), together with independent
+sample/donor support and a held-out context probe. A large probe score shows
+that context is recoverable from a representation; it does not by itself prove
+harmful bias. The primary failure criterion is instead a supported collapse in
+worst-context task performance. The versioned manifest and support matrix make
+unsupported label--context edges explicit rather than silently combining them
+with valid comparisons.
+
+
 
 \noindent\textbf{Direct spatial context shifts.}
 On native-Xenium skin, replication between two non-diseased sections reaches
