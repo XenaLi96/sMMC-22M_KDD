@@ -918,39 +918,71 @@ We presented \dataset as a cell-aligned, context-aware resource that boosts ST r
 \twocolumn[{
 \begin{minipage}{\textwidth}
 \begin{center}
-{\Huge\bfseries Appendix}
+{\Huge\bfseries Appendix}\\[4pt]
+{\Large\bfseries Additional Experiments, Implementation Details, and Dataset Documentation}
 \end{center}
-\vspace{2pt}
+\vspace{5pt}
+\hrule
+\vspace{7pt}
 
 \noindent\textbf{Overview.}
-This appendix supports the main scale--resolution--context claims and documents
-the release. Appendix~A defines intended use, licensing, and limitations.
-Appendix~B records provenance for native Xenium cells, Visium HD derivatives,
-and in-house DBiC-seq cells, together with construction, quality control, and
-the released schema. Appendix~C provides construction-sensitivity,
-sample/platform-transfer, biological-calibration, and pseudo-spot controls,
-\methodname and protocol details, failure analyses, and context-aware use
-cases. Appendix~D is the datasheet; Appendices~E and F state author
-responsibility and reproducibility requirements.
+This appendix documents the complete evidence chain behind \dataset and
+\methodname, from source provenance and cell-aligned target construction to
+sensitivity analysis, transfer evaluation, and reuse. Appendix~A defines
+intended use, licensing, and coverage boundaries. Appendix~B separates native
+Xenium cells, Visium HD bin-to-cell derivatives, and in-house DBiC-seq cells;
+it then records source manifests, quality audits, alignment procedures, and
+the release schema. Appendix~C reports construction sensitivity, biological
+calibration, sample/platform transfer, pseudo-spot controls, the \methodname
+architecture and objective, benchmark protocols and metrics, failure analysis,
+and secondary use cases. Appendix~D provides the datasheet, while
+Appendices~E and F state author responsibilities and reproducibility
+requirements. Native-cell, derived-target, transfer, and auxiliary analyses
+are reported separately rather than pooled as equivalent evidence.
 
+\vspace{7pt}
+\noindent{\Large\bfseries Appendix Contents}
 \vspace{4pt}
-\noindent\textbf{Appendix contents}
-\vspace{1pt}
 
 \begingroup
-\small
+\footnotesize
 \setlength{\tabcolsep}{0pt}
-\renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\textwidth}{@{}X@{\hspace{1.2em}}X@{\hspace{1.2em}}X@{}}
-\hyperref[sec:ethics]{\textbf{A}\enspace Ethical use, limitations, and licensing} &
-\hyperref[sec:background]{\textbf{B}\enspace Provenance, construction, QC, and release schema} &
-\hyperref[sec:supplementary_results]{\textbf{C}\enspace Validation, \methodname, and downstream analyses} \\
-\hyperref[sec:cellnet_datasheet]{\textbf{D}\enspace Datasheet for \dataset} &
-\hyperref[sec:author_statement]{\textbf{E}\enspace Author statement} &
+\renewcommand{\arraystretch}{1.16}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}X@{\hspace{1.35em}}>{\raggedright\arraybackslash}X@{\hspace{1.35em}}>{\raggedright\arraybackslash}X@{}}
+\textbf{Release and construction} &
+\textbf{Validation and \methodname} &
+\textbf{Use cases and documentation} \\
+\hyperref[sec:ethics]{\textbf{A}\enspace Ethical use and licensing} &
+\hyperref[sec:reviewer_validation]{\textbf{C.1}\enspace Validation and stress tests} &
+\hyperref[sec:coarse_cell_state]{\textbf{C.8.1}\enspace Coarse cell-state recovery} \\
+\hyperref[sec:provenance_coverage]{\textbf{B.1}\enspace Provenance and coverage} &
+\hyperref[sec:STBoost_appendix_details]{\textbf{C.2}\enspace \methodname architecture and objective} &
+\hyperref[sec:multi_organ_classification]{\textbf{C.8.2}\enspace Multi-organ classification} \\
+\hyperref[sec:comp_path]{\textbf{B.2}\enspace Xenium source data} &
+\hyperref[sec:benchmark_protocol]{\textbf{C.3}\enspace Benchmark protocol} &
+\hyperref[sec:caption_audit]{\textbf{C.8.3}\enspace Caption audit} \\
+\hyperref[sec:st]{\textbf{B.3}\enspace Visium HD source data} &
+\hyperref[sec:prediction_metrics]{\textbf{C.4}\enspace Targets and metrics} &
+\hyperref[sec:cellnet_datasheet]{\textbf{D}\enspace Datasheet for \dataset} \\
+\hyperref[sec:inhouse_dbic]{\textbf{B.4}\enspace In-house DBiC-seq data} &
+\hyperref[sec:encoder_protocol]{\textbf{C.5}\enspace Encoder protocol} &
+\hyperref[sec:author_statement]{\textbf{E}\enspace Author statement} \\
+\hyperref[sec:benchmark_manifest]{\textbf{B.5}\enspace Benchmark support and manifest} &
+\hyperref[sec:extended_prediction_results]{\textbf{C.6}\enspace Extended prediction results} &
 \hyperref[sec:reproducibility_checklist]{\textbf{F}\enspace Reproducibility checklist} \\
+\hyperref[sec:source_quality_audits]{\textbf{B.6}\enspace Source-data quality audits} &
+\hyperref[sec:failure_robustness]{\textbf{C.7}\enspace Failure and robustness} &
+\\
+\hyperref[sec:construction_alignment]{\textbf{B.7}\enspace Construction and alignment} &
+\hyperref[sec:downstream_use_cases]{\textbf{C.8}\enspace Downstream analyses} &
+\\
+\hyperref[sec:release_schema]{\textbf{B.8}\enspace Release schema} &&
+\\
 \end{tabularx}
 \endgroup
-\vspace{7pt}
+\vspace{6pt}
+\hrule
+\vspace{9pt}
 \end{minipage}
 }]
 \thispagestyle{plain}
@@ -973,6 +1005,7 @@ The release also inherits the long-tail structure of the underlying studies. Org
 \section{Data Source}
 \label{sec:background}
 \subsection{Provenance and release-level coverage}
+\label{sec:provenance_coverage}
 \noindent
 In this section, we present the two public 10x Genomics sources,
 \textbf{Xenium} and \textbf{Visium HD}, together with the newly added in-house
@@ -1128,6 +1161,7 @@ cells is under preparation but is not included in any count or result in this
 paper.
 
 \subsection{Benchmark support and complete public-source manifest}
+\label{sec:benchmark_manifest}
 The compact support table below defines the lung examples used in the
 protocol-focused analyses, while
 \Cref{tab:all_xenium_visium_summary} provides the complete public Xenium and
@@ -1264,6 +1298,7 @@ Zebrafish & Visium HD & Head (Fresh-frozen; 3') & Head & 54251 & 18{,}085 \\
 \end{table*}
 
 \subsection{Completed quality audits for Visium HD and Xenium}
+\label{sec:source_quality_audits}
 Before treating the release as a benchmark rather than a loose data collection, we audited both source platforms for the specific failure modes that would most directly invalidate downstream evaluation. For Visium HD, the critical checks are whether aligned cells remain stably anchored to in-tissue barcodes and whether large context crops frequently fall off the tissue boundary. For Xenium, the critical checks are whether cell centroids remain consistent with polygon-derived boundaries when those boundaries are available, whether crop extraction stays within the morphology frame, and whether matching-organ gene overlap with HD is large enough to support fair shared-gene evaluation.
 
 Table~\ref{tab:platform_qc_summary} summarizes the completed audits. The HD audit covers 24 complete samples across 16 organ groups and 10M aligned cells. Organ-level median assignment distance stays in a narrow 10.81--11.89 pixel range, and the mean 224-pixel crop edge rate is effectively zero ($2.95\times10^{-6}$). The Xenium audit covers 42 complete samples across 15 organ groups and 12M detected cells. For samples with polygon support, median centroid inconsistency stays between 0.12 and 0.14 pixels, while the mean 224-pixel crop edge rate remains low at 0.00541. For HD, the weighted top-200 gene fraction ranges from 0.154 to 0.691 across organs, which indicates organ-dependent concentration differences but not an obvious collapse of molecular support.
@@ -1428,18 +1463,22 @@ Human Kidney & 1 & 1 & 110,711 & 97,560 & 18,043 & 535 & 368 \\
 \end{table*}
 
 \subsection{Dataset construction and alignment pipeline}
+\label{sec:construction_alignment}
 The benchmark-ready pipeline follows the same high-level stages across studies: (1) source download and metadata audit; (2) slide- and section-level eligibility checks; (3) coordinate registration between histology and molecular coordinates; (4) cell segmentation or use of platform-provided masks; (5) multi-scale patch extraction centered on each retained cell; (6) expression assignment and gene-symbol harmonization; (7) benchmark split generation; and (8) optional generation of captions and communication-graph summaries. The key design choice is that the final released unit is always a \emph{cell} with aligned morphology, coordinates, and expression, even when the upstream technology is spot/bin based.
 
+\FloatBarrier
+
 \subsection{Data schema and release package}
+\label{sec:release_schema}
 The benchmark release is organized around a small number of reusable artifact types. Multi-scale image crops and aligned expression matrices are paired through cell identifiers; metadata tables provide organ/platform/sample/study fields and spatial coordinates; split files define train/validation/test membership; and evaluation scripts consume the same processed release used to produce the appendix results. The review package focuses on the assets needed to inspect the protocol, while the full release keeps the same schema and versioning conventions.
 
-\begin{table*}[t]
+\begin{table}[H]
 \centering
 \scriptsize
 \setlength{\tabcolsep}{5pt}
 \caption{Main artifact types in the \dataset benchmark release.}
 \label{tab:data_schema}
-\begin{tabularx}{\textwidth}{
+\begin{tabularx}{\linewidth}{
 >{\raggedright\arraybackslash}p{2.65cm}
 >{\raggedright\arraybackslash}X}
 \toprule
@@ -1453,9 +1492,7 @@ Configs and scripts & Python/YAML/shell; experiment; required. Loaders, evaluati
 Auxiliary annotations & CSV/JSON; cell or neighborhood; optional. Captions, communication summaries, and downstream labels. \\
 \bottomrule
 \end{tabularx}
-\end{table*}
-
-\FloatBarrier
+\end{table}
 
 \section{Supplementary Benchmark and Analysis Results}
 \label{sec:supplementary_results}
@@ -1769,8 +1806,6 @@ across all categories. The remaining appendix tables provide complementary
 transfer, sensitivity, and ablation analyses under the released benchmark
 protocol.
 
-\FloatBarrier
-
 \subsection{Benchmark protocol details}
 \label{sec:benchmark_protocol}
 The current appendix reports the three benchmark regimes used throughout the paper: \textbf{in-domain}, \textbf{cross-patient}, and \textbf{cross-platform}. In-domain evaluation uses a left--right spatial split within a sample, with the left two thirds of the tissue used as the retrieval/reference bank and the right one third used as held-out evaluation. For the representative Visium HD sample A this split is implemented by an $x$-axis cutoff at 15,600.65 in full-resolution coordinates; for native-Xenium lung target X1 the corresponding cutoff is 1,933.71. Cross-patient evaluation keeps the same preprocessing and model protocol but changes the test sample, e.g., A$\!\rightarrow\!$B. Cross-platform evaluation changes both sample and acquisition technology, and is therefore restricted to the shared-gene set after gene-symbol harmonization.
@@ -1778,14 +1813,17 @@ The current appendix reports the three benchmark regimes used throughout the pap
 The current appendix should be read as a matched three-regime benchmark package. Throughout the appendix, all reported retrieval results follow the same in-domain, cross-patient, and cross-platform protocol with shared preprocessing, target definitions, and evaluation code.
 
 \subsection{Prediction targets and metric definitions}
+\label{sec:prediction_metrics}
 Two target definitions are used. Within-platform Visium HD runs use the full 18,085-gene panel available in the processed HD cell table. Cross-platform runs use only the shared genes between the train and test domains after harmonized symbol matching. In the completed experiments this yields 465 genes for A$\!\rightarrow\!$X2 and 370 genes for A$\!\rightarrow\!$X1 and X1$\!\rightarrow\!$B, while native-Xenium in-domain evaluation on X1 uses its 541-gene panel.
 
 We report the same metric bundle for every completed run: nonzero-detection F1, nonzero-rate difference, gene-wise rank Spearman, cell-wise rank Spearman (reported as transposed rank Spearman), matrix distance, energy distance, and RBF-MMD. Gene-wise and cell-wise Spearman are averaged over the evaluation genes/cells respectively. F1 and rate difference summarize sparsity recovery, while the distribution metrics quantify broader mismatch even when sparse support looks reasonable.
 
 \subsection{Pathology encoder benchmark protocol}
+\label{sec:encoder_protocol}
 The strongest completed frozen-encoder configuration in this revision uses the UNI2-h pathology encoder under a matched retrieval protocol. Each cell is represented by paired local/context crops with sizes 64 and 256 pixels, resized to the encoder input size of 224. The backbone is frozen, features are extracted once, and prediction is done with top-$k$ retrieval using $k=10$. For the Xenium$\leftrightarrow$Visium cached cross-platform experiments, the same retrieval logic is reused on cached features, together with shared-gene normalization on the expression targets. This is the protocol underlying the appendix benchmark analyses.
 
 \subsection{Extended results for gene expression prediction}
+\label{sec:extended_prediction_results}
 \noindent
 The appendix retrieval results are organized under the three standardized regimes. Two patterns are already clear. First, in-domain performance is consistently stronger than transfer, especially on the cell-wise Spearman metric. Second, cross-platform transfer remains heterogeneous: A$\!\rightarrow\!$X2 is meaningfully better than A$\!\rightarrow\!$X1, which is close to failure despite using the same encoder family and normalization recipe. This is exactly the kind of regime-specific behavior that motivated the benchmark.
 \noindent
@@ -1848,17 +1886,20 @@ Xenograft & Visium HD & 1 & 263,743\\
 \end{figure}
 
 \subsection{Failure analysis and robustness notes}
+\label{sec:failure_robustness}
 The qualitative lesson from the completed runs is that transfer difficulty is not monotonic in platform alone. A$\!\rightarrow\!$X2 produces a usable shared-gene signal, while A$\!\rightarrow\!$X1 collapses on both F1 and rank-based correlation. This asymmetry suggests that study-specific acquisition, tissue state, or panel composition still dominate simple platform labels. The benchmark should therefore be interpreted as a stress test for realistic generalization rather than a leaderboard on a single homogeneous target.
 
 \FloatBarrier
 
 \subsection{Additional downstream analyses and use cases}
+\label{sec:downstream_use_cases}
 Beyond the core image-to-gene benchmark, \dataset supports analyses of coarse
 cell state, tissue routing, and language-aligned records. These studies are
 grouped here because they demonstrate possible uses of the released record
 structure; none is treated as a primary benchmark claim.
 
 \subsubsection{Coarse cell-state recovery}
+\label{sec:coarse_cell_state}
 Beyond direct gene retrieval, we also evaluated a coarse downstream celltype analysis on representative Visium HD lung sample A using the completed coarse-to-fine checkpoint. This analysis contains 111,772 cells, 10 unsupervised clusters, and a 50-gene target subset. Because this illustrative run uses a restricted 50-gene panel, only three marker-derived classes remain stable in the current appendix: \textit{Club}, \textit{AT2}, and \textit{Immune}. In other words, this is best read as a marker-derived coarse cell-state analysis rather than a full cell ontology benchmark.
 
 \begin{figure*}[t]
@@ -1914,6 +1955,7 @@ Retained marker-derived classes & Club, AT2, Immune \\
 \end{table*}
 
 \subsubsection{Multi-organ classification}
+\label{sec:multi_organ_classification}
 
 \noindent
 This subsection is kept as a reference-model implementation detail rather than as a core benchmark contribution. When organ routing is used in a full-model pipeline, it determines which organ-specific expert is invoked before gene prediction. False positives mostly increase compute cost, whereas false negatives can route a patch to the wrong expert family and hurt downstream prediction quality.
@@ -1969,6 +2011,7 @@ Weighted Avg   & 0.89 & 0.89 & 0.89 & 708 \\
 \end{table}
 
 \subsubsection{Caption generation and semantic-consistency audit}
+\label{sec:caption_audit}
 \noindent
 Captioning remains an auxiliary modality in the current release rather than a main benchmark target. We keep it because structured text can help browse the data package and support future multimodal work, but we do \emph{not} treat caption quality as evidence that language is central to the current gene-prediction benchmark.
 
