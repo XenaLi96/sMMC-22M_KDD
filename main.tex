@@ -914,18 +914,46 @@ We presented \dataset as a cell-aligned, context-aware resource that boosts ST r
 \setlength{\@fpbot}{0pt plus 1fil}
 \makeatother
 
-\thispagestyle{plain}
-\begin{center}
-\LARGE\bfseries Appendix
-\end{center}
 \markboth{Appendix}{Appendix}
+\twocolumn[{
+\begin{minipage}{\textwidth}
+\begin{center}
+{\Huge\bfseries Appendix}
+\end{center}
+\vspace{2pt}
 
-\noindent
-The appendix is organized as follows. Appendix~A states the intended use and
-release constraints. Appendix~B documents provenance, construction, quality
-control, and the released schema. Appendix~C collects validation, stress
-tests, model details, and downstream analyses. Appendix~D provides the
-datasheet, followed by the author statement and reproducibility checklist.
+\noindent\textbf{Overview.}
+This appendix supports the main scale--resolution--context claims and documents
+the release. Appendix~A defines intended use, licensing, and limitations.
+Appendix~B records provenance for native Xenium cells, Visium HD derivatives,
+and in-house DBiC-seq cells, together with construction, quality control, and
+the released schema. Appendix~C provides construction-sensitivity,
+sample/platform-transfer, biological-calibration, and pseudo-spot controls,
+\methodname and protocol details, failure analyses, and context-aware use
+cases. Appendix~D is the datasheet; Appendices~E and F state author
+responsibility and reproducibility requirements.
+
+\vspace{4pt}
+\noindent\textbf{Appendix contents}
+\vspace{1pt}
+
+\begingroup
+\small
+\setlength{\tabcolsep}{0pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{@{}X@{\hspace{1.2em}}X@{\hspace{1.2em}}X@{}}
+\hyperref[sec:ethics]{\textbf{A}\enspace Ethical use, limitations, and licensing} &
+\hyperref[sec:background]{\textbf{B}\enspace Provenance, construction, QC, and release schema} &
+\hyperref[sec:supplementary_results]{\textbf{C}\enspace Validation, \methodname, and downstream analyses} \\
+\hyperref[sec:cellnet_datasheet]{\textbf{D}\enspace Datasheet for \dataset} &
+\hyperref[sec:author_statement]{\textbf{E}\enspace Author statement} &
+\hyperref[sec:reproducibility_checklist]{\textbf{F}\enspace Reproducibility checklist} \\
+\end{tabularx}
+\endgroup
+\vspace{7pt}
+\end{minipage}
+}]
+\thispagestyle{plain}
 
 \section{Ethical Considerations, Intended Usage, and License}
 \label{sec:ethics}
@@ -1405,14 +1433,14 @@ The benchmark-ready pipeline follows the same high-level stages across studies: 
 \subsection{Data schema and release package}
 The benchmark release is organized around a small number of reusable artifact types. Multi-scale image crops and aligned expression matrices are paired through cell identifiers; metadata tables provide organ/platform/sample/study fields and spatial coordinates; split files define train/validation/test membership; and evaluation scripts consume the same processed release used to produce the appendix results. The review package focuses on the assets needed to inspect the protocol, while the full release keeps the same schema and versioning conventions.
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{5pt}
 \caption{Main artifact types in the \dataset benchmark release.}
 \label{tab:data_schema}
-\begin{tabularx}{\columnwidth}{
->{\raggedright\arraybackslash}p{1.48cm}
+\begin{tabularx}{\textwidth}{
+>{\raggedright\arraybackslash}p{2.65cm}
 >{\raggedright\arraybackslash}X}
 \toprule
 \textbf{Artifact} & \textbf{Format, unit, status, and contents} \\
@@ -1425,11 +1453,12 @@ Configs and scripts & Python/YAML/shell; experiment; required. Loaders, evaluati
 Auxiliary annotations & CSV/JSON; cell or neighborhood; optional. Captions, communication summaries, and downstream labels. \\
 \bottomrule
 \end{tabularx}
-\end{table}
+\end{table*}
 
 \FloatBarrier
 
 \section{Supplementary Benchmark and Analysis Results}
+\label{sec:supplementary_results}
 \subsection{Reviewer-motivated validation and stress tests}
 \label{sec:reviewer_validation}
 
@@ -2195,6 +2224,7 @@ The authors bear responsibility for the curation, processing, documentation,
 and release decisions associated with \dataset.
 
 \section{Reproducibility Checklist for \dataset Bench}
+\label{sec:reproducibility_checklist}
 \noindent
 To reproduce the appendix benchmarks, a user needs the processed cell-level release, the split files for the chosen regime, and the corresponding evaluation script. The essential checklist is:
 \begin{itemize}
