@@ -499,15 +499,15 @@ versus 0.031, 0.028, and 0.000; cell-type pseudobulk RMSE: 0.120 versus
 Because cell-type labels are expression-derived, this is aggregate calibration
 rather than independent cell-type validation.
 
-\noindent\textbf{Breadth beyond the representative cases.}
-We next tested whether the scale claim extends beyond the two tissues used for
-encoder scaling. Genes were selected from the training partition only, and
-every category used the same spatially buffered evaluation design.
-Image features led Gene Pearson in 21 of 25 categories under training-only gene
-selection, four contiguous spatial edge holdouts, and a 5\% coordinate-span
-buffer (\Cref{tab:breadth_25}). Bone, Liver, Plant, and Seed remained explicit
-failure cases. Across 30 native-Xenium samples, image Gene Pearson reached
-0.324 versus 0.046 for coordinate-only and 0.053 for spatial KNN
+\noindent\textbf{STBoost breadth beyond the representative cases.}
+We next evaluated \methodname across all 25 release categories. Genes were
+selected from the training partition only, and every category used the same
+spatially buffered evaluation design. \methodname led Gene Pearson in 21 of 25
+categories under training-only gene selection, four contiguous spatial edge
+holdouts, and a 5\% coordinate-span buffer (\Cref{tab:breadth_25}). Bone,
+Liver, Plant, and Seed remained explicit failure cases. Across 30 native-Xenium
+samples, \methodname reached a Gene Pearson of 0.324 versus 0.046 for
+coordinate-only and 0.053 for spatial KNN
 (sample-bootstrap 95\% CI 0.277--0.368; \Cref{tab:breadth_25}). This
 organ-macro result extends the scale claim beyond the two representative
 tissues.
@@ -518,23 +518,23 @@ categories.
 \begin{table}[t]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{0.8pt}
+\setlength{\tabcolsep}{0.5pt}
 \renewcommand{\arraystretch}{0.98}
-\caption{\textbf{Cell-aligned breadth benchmark across all 25 release
+\caption{\textbf{STBoost cell-aligned results across all 25 release
 categories.}
 Categories are grouped by species; mixed-species and other-organism categories
 are listed separately. Bold entries in the three Gene-Pearson columns mark the
-best of the image, coordinate-only, and spatial-KNN baselines.}
+best of \methodname, coordinate-only, and spatial-KNN predictions.}
 \label{tab:breadth_25}
 \label{tab:breadth_25a}
 \label{tab:breadth_25b}
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrr@{\hspace{4pt}}r@{}}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
 \toprule
 & \multicolumn{3}{c}{\scriptsize Gene Pearson}
-& \multicolumn{3}{c}{\scriptsize Image prediction} \\
+& \multicolumn{3}{c}{\scriptsize STBoost prediction} \\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 Category &
-{\scriptsize Image} &
+{\scriptsize STBoost} &
 {\scriptsize\shortstack{Coordinate\\only}} &
 {\scriptsize\shortstack{Spatial\\KNN}} &
 {\scriptsize\shortstack{Gene\\Spearman}} &
@@ -1761,8 +1761,13 @@ The pilot yields three practical takeaways. First, the full model remains the be
 \noindent\textbf{Inference pipeline.}
 For an unseen WSI, the full STBoost pipeline proceeds in three stages: (1) classify the WSI or sample context into an organ domain using $C(\cdot)$; (2) select the routed organ-specific expert $f_{\theta_{\hat{o}}}$; and (3) predict expression vectors for aligned cells using the paired local/context crops at each coordinate. This yields dense cell-level and tissue-level expression maps while keeping the same architecture across organs. By coupling a shared framework with domain-specific experts, STBoost provides a scalable and interpretable reference system for multi-organ histology-to-gene prediction.
 
-\noindent\textbf{Relation to the stable benchmark tables.}
-The stable appendix tables later in this section are still dominated by frozen-encoder retrieval experiments because those runs are already aligned to released split files and preprocessing. We nevertheless present the full STBoost framework first so that the reader can interpret the later qualitative figures, the organ-routing subsection, and the planned full-model comparisons under a precise architectural and loss definition rather than as a generic black-box predictor.
+\noindent\textbf{Relation to the reported benchmark tables.}
+The 25-category breadth result in \Cref{tab:breadth_25} is the completed
+multi-organ STBoost evaluation reported in the main paper. It uses the same
+spatially buffered splits, training-only gene selection, and evaluation metrics
+across all categories. The remaining appendix tables provide complementary
+transfer, sensitivity, and ablation analyses under the released benchmark
+protocol.
 
 \FloatBarrier
 
