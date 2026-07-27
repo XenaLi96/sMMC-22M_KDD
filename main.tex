@@ -861,11 +861,9 @@ through the machine-readable manifest.
 
 The manifest distinguishes the scope of each artifact and documents platform
 composition, aligned-cell scale, and benchmark coverage
-(\Cref{tab:main_release_manifest}). Large assets are linked through checksum-
-backed entries and documented download paths. The repository also includes
-license notes, responsible-use terms, and fixed split definitions so that
-future models can be evaluated without redefining preprocessing or held-out
-partitions. No benchmark score in this paper depends on hidden internal files.
+(\Cref{tab:main_release_manifest}). Checksum-backed download paths, license
+notes, responsible-use terms, and fixed splits make scores auditable
+without hidden files.
 
 \section{Discussion and Limitations}
 The value of \dataset lies in enabling stronger evaluation, not in implying that histology-to-molecular prediction is solved. Scale improves morphology--gene correspondence, but the scaling-law results do not remove the need for leakage-controlled biological transfer tests. Cell-level resolution makes the task more biologically meaningful, but it also exposes errors that spot-level averaging can hide. Rich context enables worst-context auditing and context-aware adaptation, but metadata and independent donor support remain incomplete and uneven across public studies. Some organs support only a subset of evaluation regimes, and complete matched comparisons across all baseline families remain limited by the availability of aligned preprocessing and split definitions.
@@ -883,6 +881,7 @@ corrected.
 \section{Conclusion}
 We presented \dataset as a cell-aligned, context-aware resource that boosts ST research along three axes: scale, resolution, and rich biological context. Scale enables controlled encoder benchmarking and reveals foundation-model scaling behavior for morphology--gene correspondence. Resolution enables a practical framework for converting spot-level histology--omics methods into single-cell predictors, evaluated under strict in-domain and cross-sample splits. Rich context exposes failures hidden by pooled performance and provides the support-aware interface needed to benchmark context-balanced training, lightweight adaptation, and fine-tuning. Together, these results position \dataset and \methodname as a more realistic basis for single-cell histology-to-molecular modeling while keeping unresolved generalization challenges visible.
 
+\setlength{\bibsep}{0pt}
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{egbib}
 
@@ -906,6 +905,14 @@ We presented \dataset as a cell-aligned, context-aware resource that boosts ST r
 \renewcommand{\floatpagefraction}{0.82}
 \renewcommand{\dbltopfraction}{0.95}
 \renewcommand{\dblfloatpagefraction}{0.82}
+\setcounter{topnumber}{4}
+\setcounter{dbltopnumber}{3}
+\setcounter{totalnumber}{6}
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{12pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
 
 \thispagestyle{plain}
 \begin{center}
@@ -1827,7 +1834,6 @@ Beyond direct gene retrieval, we also evaluated a coarse downstream celltype ana
 \caption{Downstream celltype appendix panel for representative sample A. The panel summarizes whole-slide organization, local patch comparisons, and marker-derived celltype structure under the aligned cluster palette used throughout the downstream analysis.}
 \label{fig:celltype_panel}
 \end{figure*}
-\FloatBarrier
 
 \begin{table}[t]
 \centering
@@ -2181,6 +2187,7 @@ If the dataset is ever discontinued, we will note this in the GitHub README. We 
 
 Benchmark scores should not be interpreted as uniformly representative across all biological domains. Organ, species, and platform coverage are deliberately broad but highly uneven, and demographic metadata are sparse for many public studies. The benchmark is therefore best understood as a reproducible stress test for multimodal pathology models, not as a clinically calibrated estimate of performance for any individual population.
 
+\balance
 \section{Author Statement}
 \label{sec:author_statement}
 \noindent
@@ -2200,94 +2207,5 @@ To reproduce the appendix benchmarks, a user needs the processed cell-level rele
 \end{itemize}
 
 In practice, the appendix results reported here can be regenerated directly from the processed benchmark assets and scripts already referenced throughout this document. The three-regime benchmark package described in this appendix uses the same processed release, split definitions, and evaluation scripts throughout.
-
-
-\clearpage
-\section*{NeurIPS Paper Checklist}
-
-\begin{enumerate}[leftmargin=*]
-
-\item \textbf{Claims.}
-    \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The abstract and Introduction state the paper's scope as a context-aware, cell-aligned spatial-transcriptomics resource and benchmark for image-to-single-cell gene-expression prediction. The claims are supported by the release manifest, dataset construction, quality-control analyses, single-cell alignment protocol, encoder benchmarking, STBoost-Ref--BLEEP comparison, in-domain and cross-patient evaluation, cross-platform stress tests, and age-shift analysis.
-
-\item \textbf{Limitations.}
-    \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper states that robust histology-to-gene generalization remains limited by biological context, platform shift, patient shift, organ coverage, and cellular-resolution alignment quality. It also frames cross-patient, cross-platform, and age-shift evaluations as stress tests rather than solved deployment settings. The release is presented as a research benchmark, not as a clinical prediction system.
-
-\item \textbf{Theory assumptions and proofs.}
-    \item[] Question: For each theoretical result, does the paper provide the full set of assumptions and a complete proof?
-    \item[] Answer: \textbf{N/A.}
-    \item[] Justification: The paper does not make theoretical theorem or proof claims. The mathematical and algorithmic content defines data alignment, cell-centered histology records, benchmark splits, model inputs, training objectives, and evaluation metrics.
-
-\item \textbf{Experimental result reproducibility.}
-    \item[] Question: Does the paper fully disclose the information needed to reproduce the main experimental results to the extent that it affects the main claims and conclusions?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper and appendix describe the standardized datasets, cell-alignment procedure, train/validation/test split definitions, organ-level benchmark coverage, target gene construction, shared-gene filtering, baseline methods, random seed, metrics, and evaluation protocols. The benchmark package includes split-indexed configurations for all-organ in-domain evaluation and the eight multi-sample organs used for cross-patient and cross-platform evaluation.
-
-\item \textbf{Open access to data and code.}
-    \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to reproduce the main experimental results?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper provides an anonymized GitHub repository containing release manifests, reviewer subsets, benchmark splits, configuration files, and scripts for reproducing the main tables and figures. Upstream biological samples are public or externally sourced datasets cited in the manuscript; reviewer and benchmark packages are derived artifacts and do not introduce additional biological samples. Full source code and derived benchmark artifacts will be publicly released subject to upstream data terms.
-
-\item \textbf{Experimental setting and details.}
-    \item[] Question: Does the paper specify all training and test details necessary to understand the results?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper specifies the image-to-single-cell gene-expression prediction task, in-domain and cross-patient regimes, cross-platform protocols, sample identities, train/validation/test construction, 5{,}000-cell test subsets for matched STBoost-Ref--BLEEP comparisons, 18{,}085 shared genes, random seed 42, and reported metrics including F1, gene-wise Pearson/Spearman/MSE, cell-wise Pearson/Spearman/MSE, and sparsity calibration metrics.
-
-\item \textbf{Experiment statistical significance.}
-    \item[] Question: Does the paper report error bars or other appropriate information about statistical significance?
-    \item[] Answer: \textbf{No.}
-    \item[] Justification: The main benchmark emphasizes leakage-controlled splits, matched test cells, matched shared-gene panels, fixed random seeds, and multiple complementary metrics. However, the manuscript does not systematically report repeated-seed error bars, confidence intervals, or statistical significance tests for every benchmark and ablation. The reported results should therefore be interpreted as controlled benchmark measurements rather than full uncertainty-quantified estimates.
-
-\item \textbf{Experiments compute resources.}
-    \item[] Question: For each experiment, does the paper provide sufficient information on compute resources needed to reproduce the experiments?
-    \item[] Answer: \textbf{No.}
-    \item[] Justification: The paper provides data construction details, benchmark splits, model settings, and reproduction scripts, but it does not fully itemize hardware, memory usage, wall-clock runtime, or storage requirements for every reported experiment. Exact runtime will depend on local GPU, CPU, memory, storage, and I/O configuration.
-
-\item \textbf{Code of ethics.}
-    \item[] Question: Does the research conform to the NeurIPS Code of Ethics?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The work uses existing public or externally sourced research datasets and does not involve new participant recruitment, human-subject intervention, clinical deployment, or personally identifiable private information. The model and benchmark are presented for research evaluation of spatial-transcriptomics prediction, not for diagnosis, treatment selection, or clinical decision-making.
-
-\item \textbf{Broader impacts.}
-    \item[] Question: Does the paper discuss potential positive and negative societal impacts of the work?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper motivates positive impact through scalable single-cell spatial-transcriptomics benchmarking, improved evaluation of histology-to-gene models, and reusable cell-aligned data assets. It also identifies negative or misuse risks: benchmark performance may not imply clinical robustness, cross-patient and cross-platform generalization remains difficult, and predictions should not be used for medical or therapeutic decisions without additional biological, clinical, and regulatory validation.
-
-\item \textbf{Safeguards.}
-    \item[] Question: Does the paper describe safeguards for responsible release of high-risk models or datasets?
-    \item[] Answer: \textbf{N/A.}
-    \item[] Justification: The paper does not release a high-risk generative model, clinical decision system, human-facing model, or private scraped dataset. The released assets are research code, release manifests, cell-aligned derived artifacts, benchmark splits, configuration files, and reviewer subsets constructed from public or externally sourced biological datasets. Upstream access and redistribution are governed by the original data-source terms.
-
-\item \textbf{Licenses for existing assets.}
-    \item[] Question: Are creators or original owners of used assets properly credited, and are license and terms of use respected?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper cites upstream spatial-transcriptomics datasets, 10x Genomics example datasets, pathology and spatial-analysis resources, and external baseline methods. Raw upstream biological samples are not claimed as new assets. The released manifests and benchmark artifacts document provenance and are intended to respect original data licenses and redistribution terms.
-
-\item \textbf{New assets.}
-    \item[] Question: Are new assets introduced in the paper well documented and provided alongside the assets?
-    \item[] Answer: \textbf{Yes.}
-    \item[] Justification: The paper introduces sMMC-22M, a standardized cell-aligned multimodal resource; release manifests; reviewer subsets; benchmark splits; configuration files; and evaluation scripts. The documentation describes the standardized biological datasets, aligned-cell records, platform-specific files, organ-level benchmark coverage, split construction, target details, and derived benchmark packages.
-
-\item \textbf{Crowdsourcing and research with human subjects.}
-    \item[] Question: For crowdsourcing experiments and research with human subjects, does the paper include participant instructions, screenshots, and compensation details?
-    \item[] Answer: \textbf{N/A.}
-    \item[] Justification: This work does not involve crowdsourcing, user studies, human annotation labor, participant recruitment, or compensation of human subjects.
-
-\item \textbf{Institutional review board approvals or equivalent for research with human subjects.}
-    \item[] Question: Does the paper describe participant risks and IRB approvals, if applicable?
-    \item[] Answer: \textbf{N/A.}
-    \item[] Justification: The study analyzes existing public or externally sourced research datasets and does not collect new human-subject data, recruit participants, intervene on participants, or use identifiable private participant information. IRB review is therefore not applicable to the work reported in this paper.
-
-\item \textbf{Declaration of LLM usage.}
-    \item[] Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods?
-    \item[] Answer: \textbf{N/A.}
-    \item[] Justification: LLMs are not an important, original, or non-standard component of the core method, dataset construction, benchmark definition, model training, or scientific claims in this research. The work is based on spatial transcriptomics, histology-image encoders, cell-level alignment, benchmark construction, and image-to-gene prediction evaluation.
-
-\end{enumerate}
-
 
 \end{document}
