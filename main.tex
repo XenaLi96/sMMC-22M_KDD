@@ -504,6 +504,35 @@ worst-context task performance. The versioned manifest and support matrix make
 unsupported label--context edges explicit rather than silently combining them
 with valid comparisons.
 
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.0pt}
+\renewcommand{\arraystretch}{1.02}
+\caption{\textbf{Representative context-bin failures across single-cell and
+pathology foundation models.} Values are balanced accuracy; higher
+Average/Worst and lower Gap are better.}
+\label{tab:context_bias_audit}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrr@{}}
+\toprule
+Task & Context / model & Average & Worst & Gap \\
+\midrule
+Bone-marrow cell type &
+Assay; Geneformer / scGPT / scVI-style &
+0.932--0.962 & 0.616--0.740 & 0.258--0.373 \\
+Ten-tissue cell type &
+Dataset; scGPT &
+0.667--0.962 & 0.004--0.892 & max 0.975 \\
+LUAD KRAS &
+Site; CONCH / H-Optimus-0 &
+0.499 / 0.567 & 0.375 / 0.305 & 0.542 / 0.528 \\
+LGG IDH &
+Site; UNI / H-Optimus-0 &
+0.682 / 0.747 & 0.464 / 0.476 & 0.471 / 0.524 \\
+\bottomrule
+\end{tabular*}
+\end{table*}
+
 \noindent\textbf{Direct spatial context shifts.}
 On native-Xenium skin, replication between two non-diseased sections reaches
 Gene Pearson 0.359, whereas normal--melanoma transfers reach only
@@ -545,35 +574,6 @@ scGPT, and scVI-style single-cell embeddings
 well as UNI, CONCH, and H-Optimus-0 pathology embeddings. Representative rows
 in \Cref{tab:context_bias_audit} show that high average balanced accuracy
 can coexist with severe assay-, dataset-, or site-specific collapse.
-
-\begin{table*}[t]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3.0pt}
-\renewcommand{\arraystretch}{1.02}
-\caption{\textbf{Representative context-bin failures across single-cell and
-pathology foundation models.} Values are balanced accuracy; higher
-Average/Worst and lower Gap are better.}
-\label{tab:context_bias_audit}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrr@{}}
-\toprule
-Task & Context / model & Average & Worst & Gap \\
-\midrule
-Bone-marrow cell type &
-Assay; Geneformer / scGPT / scVI-style &
-0.932--0.962 & 0.616--0.740 & 0.258--0.373 \\
-Ten-tissue cell type &
-Dataset; scGPT &
-0.667--0.962 & 0.004--0.892 & max 0.975 \\
-LUAD KRAS &
-Site; CONCH / H-Optimus-0 &
-0.499 / 0.567 & 0.375 / 0.305 & 0.542 / 0.528 \\
-LGG IDH &
-Site; UNI / H-Optimus-0 &
-0.682 / 0.747 & 0.464 / 0.476 & 0.471 / 0.524 \\
-\bottomrule
-\end{tabular*}
-\end{table*}
 
 Across all 50 support-eligible foundation-model rows in the audit, 43
 (86.0\%) met the prespecified fixed-bin clustered-bootstrap and
